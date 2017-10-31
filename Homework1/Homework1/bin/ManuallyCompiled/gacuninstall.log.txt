@@ -1,0 +1,8 @@
+Microsoft (R) .NET Global Assembly Cache Utility.  Version 4.0.30319.18020
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+
+Assembly: Program, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6257ebe4574a7f8c, processorArchitecture=MSIL
+Uninstalled: Program, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6257ebe4574a7f8c, processorArchitecture=MSIL
+Number of assemblies uninstalled = 1 
+Number of failures = 0
