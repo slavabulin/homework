@@ -12,8 +12,11 @@ namespace Task1
         {
             BitInserter bitIns = new BitInserter();
             
-            bitIns.InsertBits(195, 127, 2, 6); //should be 255
-            bitIns.InsertBits(195, -1, 2, 6); //should be 255
+            //bitIns.InsertBits(195, 127, 2, 6); //should be 255
+            //bitIns.InsertBits(195, -1, 2, 6); //should be 255
+            bitIns.InsertBits(-1, 0, 2, 6);  //61
+            bitIns.InsertBits(0, -1, 0, 32);  //-1
+
         }
 
         
@@ -28,15 +31,14 @@ namespace Task1
         {
             uint insertTo, insertFrom;
             if (lastIndex < firstIndex
-                || lastIndex > 31
+                || lastIndex > 32
                 || firstIndex < 0) return 0;
 
             insertFrom = ((uint)secondNumber >> firstIndex) << firstIndex;
+            insertFrom = (insertFrom << (32 - lastIndex));
+            insertFrom = (insertFrom >> (32 - lastIndex));
+            insertTo = (((uint)firstNumber >> lastIndex) << lastIndex)|(((uint)firstNumber << (32 - firstIndex)) >> (32-firstIndex));
 
-            insertFrom = ((uint)insertFrom << (32 - lastIndex));
-            insertFrom = ((uint)insertFrom >> (32 - lastIndex));
-
-            insertTo = (((uint)firstNumber >> lastIndex) << lastIndex) | (((uint)firstNumber) << firstIndex) >> firstIndex;
             int retVal = (int)(insertFrom | insertTo);
             return retVal;
 

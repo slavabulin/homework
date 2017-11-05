@@ -25,7 +25,7 @@ namespace Task5
             List<int> outputArray = new List<int>();
             for (int y = 0; y < inputArray.Length; y++)
             {
-                if(inputArray[y].ToString().ToCharArray().Contains('7'))
+                if (inputArray[y].ToString().Contains('7'))
                 {
                     outputArray.Add(inputArray[y]);
                 }

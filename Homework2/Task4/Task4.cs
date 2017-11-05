@@ -26,7 +26,7 @@ namespace Task4
             Array.Sort(charArr);
             for (int i = 0; i < concatString.Length; i++)
             {
-                if (sb.ToString().ToCharArray().Contains(charArr[i]))
+                if (sb.ToString().Contains(charArr[i]))
                 {
                     continue;
                 }

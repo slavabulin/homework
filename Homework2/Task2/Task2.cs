@@ -11,30 +11,25 @@ namespace Task2
         static void Main(string[] args)
         {
             MaximumFinder mf = new MaximumFinder();
-            int a = mf.Find(new[] {1,2,5,0,3,-1255,-1});
+            int a = mf.FindMax(new[] {1,2,5,0,3,-1255,-1});
         }
     }
 
     class MaximumFinder
     { 
-        public int Find(int[] inputArray)
+        public int FindMax(int[] inputArrary, int index = 0, int tmpMaxVal = Int32.MinValue)
         {
-            int[] secondaryArray;
-            for (int a = inputArray.Length - 1; a > 0; a--)
+            if(inputArrary[index] > tmpMaxVal)
             {
-                if (inputArray[a] > inputArray[a - 1])
-                {
-                    inputArray[a - 1] = inputArray[a];
-                    continue;
-                }
-                else
-                {
-                    secondaryArray = new int[a];
-                    Array.Copy(inputArray, secondaryArray, secondaryArray.Length);
-                    return Find(secondaryArray);
-                }
+                tmpMaxVal = inputArrary[index];
             }
-            return inputArray[0];
+            if(index < inputArrary.Length - 1)
+            {
+                index += 1;
+                return FindMax(inputArrary, index, tmpMaxVal);
+            }
+
+            return tmpMaxVal;
         }
     }
 }
