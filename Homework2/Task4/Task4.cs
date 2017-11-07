@@ -24,9 +24,9 @@ namespace Task4
             String concatString = String.Concat(firstString, secondString);
             char[] charArr = concatString.ToCharArray();
             Array.Sort(charArr);
-            for (int i = 0; i < concatString.Length; i++)
+            for (int i = 0; i < charArr.Length; i++)
             {
-                if (sb.ToString().Contains(charArr[i]))
+                if(sb.Length!=0 && sb[sb.Length-1] == charArr[i])
                 {
                     continue;
                 }
@@ -38,5 +38,8 @@ namespace Task4
             return sb.ToString();
         }
     }
+
+    
+
 
 }
