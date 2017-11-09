@@ -15,13 +15,12 @@ namespace Task1
     {
         static void Main(string[] args)
         {
-            uint number = 27;
-            double degree = 3;
+            double number = 27;//real - double
+            uint degree = 3;//natural - uint
             double accuracy = 0.0001;
-
-
-            NewtonAlgorithm ng = new NewtonAlgorithm();
-            double retVal = ng.CalculateRoot(number, degree, accuracy);
+            
+            NewtonAlgorithm ng = new NewtonAlgorithm(accuracy);
+            double retVal = ng.CalculateRoot(number, degree);
 
             if(Math.Abs(Math.Pow(retVal,degree)-number)< accuracy)
             {
@@ -31,6 +30,7 @@ namespace Task1
             {
                 Console.WriteLine("oops, it failed...");
             }
+
             Console.ReadLine();
         }
     }
@@ -38,17 +38,24 @@ namespace Task1
    
     class NewtonAlgorithm
     {
-        public double CalculateRoot(uint number, double degree, double accuracy, double prevRoot = 1)
+        double accuracy;
+        public NewtonAlgorithm(double accuracy)
+        {
+            this.accuracy = accuracy;
+        }
+
+        public double CalculateRoot(double number, uint degree, double prevRoot = 1)
         {
             double prevRootPow = CalculatePower(prevRoot, (degree - 1));
-            double curRoot = 1 / degree * ((degree - 1) * prevRoot + number / prevRootPow);
-            if(Math.Abs(curRoot-prevRoot)>accuracy)
+            double curRoot =  ((degree - 1) * prevRoot + number / prevRootPow);
+            curRoot /= degree;
+
+            if (Math.Abs(curRoot - prevRoot) > accuracy)
             {
-                return CalculateRoot(number, degree, accuracy, curRoot);
+                return CalculateRoot(number, degree, curRoot);
             }
             return curRoot;
         }
-
         double CalculatePower(double firstNumber, double degree)
         {
             double retVal = firstNumber;

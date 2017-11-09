@@ -8,7 +8,8 @@ namespace Task2
 {
     interface ISort
     {
-        int[,] SortIncrease(int[,] inputArray);
-        int[,] SortDecrease(int[,] inputArray);
+        int[,] arrayToSort { get; set; }
+        void SortIncrease();
+        void SortDecrease();
     }
 }

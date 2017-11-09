@@ -17,200 +17,104 @@ namespace Task2
     {
         static void Main(string[] args)
         {
+            int[,] arrayToSort = new int[,] { { 0, 1, 2, 3 }, { -10, 3, 75, -15 }, { 1, 4, 3, 2 } };
             //GlobalSorter gSorter = new GlobalSorter(new MaximumOfElementSorter());
             //GlobalSorter gSorter = new GlobalSorter(new MinimumOfElementSorter());
-            GlobalSorter gSorter = new GlobalSorter(new SumOfElementSorter());
-            //int[,] resVal = gSorter.IncreaseSort(new int[,] { { 0, 1, 2, 3 }, { -10, 3, 75, -15 }, { 1, 4, 3, 2 } });
-            int[,] resVal = gSorter.DecreaseSort(new int[,] { { 0, 1, 2, 3 }, { -10, 3, 75, -15 }, { 1, 4, 3, 2 } });
+            GlobalSorter gSorter = new GlobalSorter(new SumOfElementSorter(arrayToSort));
+            gSorter.IncreaseSort();            
         }
     }
 
     class SumOfElementSorter:ISort
     {
-        public int[,] SortIncrease(int[,] inputArray)
+        public int[,] arrayToSort{ get; set; }
+        public SumOfElementSorter(int[,]inputArray)
         {
-            int colLastIndex = inputArray.GetUpperBound(1);
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int[] arrOfSums = SumOfRow(inputArray);
-            int[,] retVal=null;
-            int tmpVar;
-
-            BubbleSorter bs = new BubbleSorter();
-            for (int i = 0; i < rowLastIndex + 1; i++)
-            {
-                for (int j = 0; j < rowLastIndex - i; j++)
-                {
-                    if(arrOfSums[j] > arrOfSums[j+1])
-                    {
-                        retVal = bs.SwapRow(inputArray, j, j + 1);
-                        tmpVar = arrOfSums[j];
-                        arrOfSums[j] = arrOfSums[j + 1];
-                        arrOfSums[j + 1] = tmpVar;
-                    }
-                }
-            }
-            return retVal;
+            Sorter.SetSumFirstInRow(ref inputArray);
+            arrayToSort = inputArray;
         }
-        public int[,] SortDecrease(int[,] inputArray)
-        {
-            int colLastIndex = inputArray.GetUpperBound(1);
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int tmpVar;
-            int[] arrOfSums = SumOfRow(inputArray);
-            int[,] retVal = null;
-
-            BubbleSorter bs = new BubbleSorter();
-            for (int i = 0; i < rowLastIndex + 1; i++)
-            {
-                for (int j = 0; j < rowLastIndex - i; j++)
-                {
-                    if (arrOfSums[j] < arrOfSums[j + 1])
-                    {
-                        retVal = bs.SwapRow(inputArray, j, j + 1);
-                        tmpVar = arrOfSums[j];
-                        arrOfSums[j] = arrOfSums[j + 1];
-                        arrOfSums[j + 1] = tmpVar;
-                    }
-                }
-            }
-            return retVal;
-        }
-
-        int[]SumOfRow(int[,]inputArray)
-        {
-            if (inputArray == null) return null;
-
-            int tmpVar = 0;
-            int colLastIndex = inputArray.GetUpperBound(1);
-            int rowLastIndex = inputArray.GetUpperBound(0);
-
-            int[] retVal = new int[rowLastIndex + 1];            
-
-            for (int i = 0; i <= rowLastIndex; i++)
-            {
-                for (int j = 0; j <= colLastIndex; j++)
-                {
-                    tmpVar += inputArray[i, j];
-                }
-                retVal[i] = tmpVar;
-                tmpVar = 0;
-            }
-            return retVal;
-        }
+        public void SortIncrease() { }
+        public void SortDecrease() { }
     }
 
     class MaximumOfElementSorter : ISort
     {
-        public int[,] SortIncrease(int[,] inputArray)
+        public int[,] arrayToSort{ get; set; }
+        public MaximumOfElementSorter(int[,] inputArray)
         {
-            if (inputArray == null) return null;
-
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int colLastIndex = inputArray.GetUpperBound(1);
-            BubbleSorter bs = new BubbleSorter();
-            int[,] tmpArr = bs.SortElementsInRow(inputArray);
-
-            for (int y = 0; y < rowLastIndex; y++)
-            {
-                for (int x = 0; x < rowLastIndex - y; x++)
-                {
-                    if (tmpArr[y, colLastIndex] > tmpArr[y + 1, colLastIndex])
-                    {
-                        tmpArr = bs.SwapRow(tmpArr, y, y + 1);
-                    }
-                        
-                }
-            }
-            return tmpArr;
+            Sorter.SetMaxFirstInRow(ref inputArray);
+            arrayToSort = inputArray;
         }
-        public int[,] SortDecrease(int[,] inputArray)
-        {
-            if (inputArray == null) return null;
-
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int colLastIndex = inputArray.GetUpperBound(1);
-            BubbleSorter bs = new BubbleSorter();
-            int[,] tmpArr = bs.SortElementsInRow(inputArray);
-
-            for (int y = 0; y < rowLastIndex; y++)
-            {
-                for (int x = 0; x < rowLastIndex - y; x++)
-                {
-                    if (tmpArr[y, colLastIndex] < tmpArr[y + 1, colLastIndex])
-                    {
-                        tmpArr = bs.SwapRow(tmpArr, y, y + 1);
-                    }
-
-                }
-            }
-            return tmpArr;
-        }
-
-        
+        public void SortIncrease() { }
+        public void SortDecrease() { }
     }
 
     class MinimumOfElementSorter : ISort
     {
-        public int[,] SortIncrease(int[,] inputArray)
+        public int[,] arrayToSort{ get; set; }
+        public MinimumOfElementSorter(int[,] inputArray)
         {
-            if (inputArray == null) return null;
-
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            BubbleSorter bs = new BubbleSorter();
-            int[,] tmpArr = bs.SortElementsInRow(inputArray);
-
-            for (int y = 0; y < rowLastIndex; y++)
-            {
-                for (int x = 0; x < rowLastIndex - y; x++)
-                {
-                    if (tmpArr[y, 0] > tmpArr[y + 1, 0])
-                    {
-                        tmpArr = bs.SwapRow(tmpArr, y, y + 1);
-                    }
-
-                }
-            }
-            return tmpArr;
+            Sorter.SetMinFirstInRow(ref inputArray);
+            arrayToSort = inputArray;
         }
-        public int[,] SortDecrease(int[,] inputArray)
-        {
-            if (inputArray == null) return null;
-
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int colLastIndex = inputArray.GetUpperBound(1);
-            BubbleSorter bs = new BubbleSorter();
-            int[,] tmpArr = bs.SortElementsInRow(inputArray);
-
-            for (int y = 0; y < rowLastIndex; y++)
-            {
-                for (int x = 0; x < rowLastIndex - y; x++)
-                {
-                    if (tmpArr[y, 0] < tmpArr[y + 1, 0])
-                    {
-                        tmpArr = bs.SwapRow(tmpArr, y, y + 1);
-                    }
-
-                }
-            }
-            return tmpArr;
-        }
+        public void SortIncrease() { }
+        public void SortDecrease() { }
     }
 
     class GlobalSorter
     {
-        public ISort Sorter { get; set; }
+        public ISort GSorter { get; set; }
+        public int[,] sortedArray;
         public GlobalSorter(ISort sorter)
         {
-            Sorter = sorter;
+            GSorter = sorter;
+            sortedArray = sorter.arrayToSort;
         }
+        
+        public void IncreaseSort()
+        {
+            SortRows(ref sortedArray, Order.increase);
+        }
+        public void DecreaseSort()
+        {
+            SortRows(ref sortedArray, Order.decrease);
+        }
+        void SwapRows(ref int[,] inputArray, int firstRow, int secondRow)
+        {
+            int tmpVar;
+            int colLastIndex = inputArray.GetUpperBound(1);
+            for (int i = 0; i <= colLastIndex; i++)
+            {
+                tmpVar = inputArray[secondRow, i];
+                inputArray[secondRow, i] = inputArray[firstRow, i];
+                inputArray[firstRow, i] = tmpVar;
+            }
 
-        public int[,] IncreaseSort(int[,] inputArray)
-        {
-            return Sorter.SortIncrease(inputArray);
         }
-        public int[,] DecreaseSort(int[,] inputArray)
+        void SortRows(ref int[,] inputArray, Order order = Order.increase)
         {
-            return Sorter.SortDecrease(inputArray);
+            int rowLastIndex = inputArray.GetUpperBound(0);
+            int colLastIndex = inputArray.GetUpperBound(1);
+            bool orderCondition;
+
+            for (int y = 0; y < rowLastIndex; y++)
+            {
+                for (int x = 0; x < rowLastIndex - y; x++)
+                {
+                    if (order == Order.increase)
+                    {
+                        orderCondition = (inputArray[y, 0] > inputArray[y + 1, 0]);
+                    }
+                    else
+                    {
+                        orderCondition = (inputArray[y, 0] < inputArray[y + 1, 0]);
+                    }
+                    if (orderCondition)
+                    {
+                        SwapRows(ref inputArray, y, y + 1);
+                    }
+                }
+            }
         }
     }
 }
