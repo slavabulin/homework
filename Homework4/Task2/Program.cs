@@ -19,8 +19,11 @@ namespace Task2
         static void Main(string[] args)
         {
             EuclidAlgorithm euAlgo = new EuclidAlgorithm();
-            uint a = euAlgo.CalculateGCD(Algorithm.Stein, 175, 568, 257, 3695).Item1;
-            uint b = euAlgo.CalculateGCD(Algorithm.Euclid, 175, 568, 257, 3695).Item1;
+            Tuple<uint, System.TimeSpan> a = euAlgo.CalculateGCD(Algorithm.Stein, 175, 568, 257, 3695);
+            Console.WriteLine("Algorithm.Stein: result {0}, execution time - {1}", a.Item1, a.Item2);
+            Tuple<uint, System.TimeSpan> b = euAlgo.CalculateGCD(Algorithm.Euclid, 175, 568, 257, 3695);
+            Console.WriteLine("Algorithm.Euclid: result {0}, execution time - {1}", b.Item1, b.Item2);
+
             Console.ReadLine();
         }
     }
@@ -28,7 +31,7 @@ namespace Task2
     class EuclidAlgorithm
     {
         public delegate uint CalculateDelegate(uint firstNumber, uint secondNumber);
-        public Tuple<uint> CalculateGCD(Algorithm alg, params uint[] numbers) 
+        public Tuple<uint, TimeSpan> CalculateGCD(Algorithm alg, params uint[] numbers) 
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -49,8 +52,7 @@ namespace Task2
             }
 
             sw.Stop();
-            Console.WriteLine("{0} execution time - {1}", Calc.Method.Name, sw.Elapsed);
-            return Tuple.Create(numbers[numbers.GetUpperBound(0)]);
+            return Tuple.Create(numbers[numbers.GetUpperBound(0)], sw.Elapsed);
         }
 
         uint CalculateNormalWay(uint firstNumber, uint secondNumber)
