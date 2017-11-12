@@ -8,85 +8,6 @@ namespace Task2
 {
     public static class Sorter
     {
-        public static void SetMinFirstInRow(ref int[,] inputArray)
-        {
-            MoveInRow(ref inputArray, Value.min);
-        }
-        public static void SetMaxFirstInRow(ref int[,] inputArray)
-        {
-            MoveInRow(ref inputArray, Value.max);
-        }
-        static void MoveInRow(ref int[,] inputArray, Value value)
-        {
-            int tmpVar;
-            int colLastIndex = inputArray.GetUpperBound(1);
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            bool condition;
-
-            for (int i = 0; i < rowLastIndex + 1; i++)
-            {
-                for (int a = colLastIndex; a > 0; a--)
-                {
-                    if (value == Value.max)
-                    {
-                        condition = (inputArray[i, a] > inputArray[i, a - 1]);
-                    }
-                    else
-                    {
-                        condition = (inputArray[i, a] < inputArray[i, a - 1]);
-                    }
-
-                    if (condition)
-                    {
-                        tmpVar = inputArray[i, a - 1];
-                        inputArray[i, a - 1] = inputArray[i, a];
-                        inputArray[i, a] = tmpVar;
-                    }
-                }
-            }
-        }
-        static void SortRows(ref int[,] inputArray, Order order = Order.increase)
-        {
-            int rowLastIndex = inputArray.GetUpperBound(0);
-            int colLastIndex = inputArray.GetUpperBound(1);
-            bool orderCondition;
-
-            for (int y = 0; y < rowLastIndex; y++)
-            {
-                for (int x = 0; x < rowLastIndex - y; x++)
-                {
-                    if(order == Order.increase)
-                    {
-                        orderCondition = (inputArray[y, 0] > inputArray[y + 1, 0]);
-                    }
-                    else
-                    {
-                        orderCondition = (inputArray[y, 0] < inputArray[y + 1, 0]);
-                    }
-                    if (orderCondition)
-                    {
-                        SwapRows(ref inputArray, y, y + 1);
-                    }
-                }
-            }
-        }
-        public static void SetSumFirstInRow(ref int[,] inputArray)
-        {
-            int tmpVar = 0;
-            int colLastIndex = inputArray.GetUpperBound(1);
-            int rowLastIndex = inputArray.GetUpperBound(0);
-
-            for (int i = 0; i < rowLastIndex + 1; i++)
-            {
-                for (int j = colLastIndex; j > 0; j--)
-                {
-                    tmpVar += inputArray[i, j];
-                }
-                inputArray[i, 0] = tmpVar;
-                tmpVar = 0;
-            }
-
-        }
         public static void SwapRows(ref int[,] inputArray, int firstRow, int secondRow)
         {
             int tmpVar;
@@ -99,15 +20,69 @@ namespace Task2
             }
 
         }
+        public static void SortRowsByKey(ref int[,] inputArray, int[] key, Order order = Order.increase)
+        {
+            bool orderCondition;
+            int tmpVar;
+
+            for (int i = 0; i < key.Length - 1; i++)
+            {
+                for (int j = 0; j < key.Length - i - 1; j++)
+                {
+                    if (order == Order.increase)
+                    {
+                        orderCondition = (key[j] > key[j + 1]);
+                    }
+                    else
+                    {
+                        orderCondition = (key[j] < key[j + 1]);
+                    }
+                    if (orderCondition)
+                    {
+                        SwapRows(ref inputArray, j, j + 1);
+
+                        tmpVar = key[j];
+                        key[j] = key[j + 1];
+                        key[j + 1] = tmpVar;
+                    }
+                }
+            }
+        }
+        public static int[] GetKey(int[,]inputArray, Order order)
+        {
+            int colLastIndex = inputArray.GetUpperBound(1);
+            int rowLastIndex = inputArray.GetUpperBound(0);
+            int[] key = new int[rowLastIndex + 1];
+            bool condition;
+
+            for (int i = 0; i < rowLastIndex + 1; i++)
+            {
+                key[i] = inputArray[i, 0];
+
+                for (int j = 0; j < colLastIndex + 1; j++)
+                {
+                    if(order==Order.decrease)
+                    {
+                        condition = (key[i] > inputArray[i, j]);
+                    }
+                    else
+                    {
+                        condition = (key[i] < inputArray[i, j]);
+                    }
+
+                    if (condition)
+                    {
+                        key[i] = inputArray[i, j];
+                    }
+                }
+            }
+            return key;
+        }
     }
-    enum Value
-    {
-        min,
-        max
-    }
-    enum Order
+    public enum Order
     {
         increase,
         decrease
     }
+   
 }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    interface ISort
+    interface IStrategy
     {
         int[,] arrayToSort { get; set; }
-        void SortIncrease();
-        void SortDecrease();
+        int[] GetKeyToSort();
     }
 }
