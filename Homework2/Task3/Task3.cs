@@ -23,7 +23,7 @@ namespace Task3
         }
     }
 
-    class SumChecker
+    public class SumChecker
     { 
         public int Check(int[] inputArray)
         {

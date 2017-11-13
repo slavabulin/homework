@@ -15,7 +15,7 @@ namespace Task2
         }
     }
 
-    class MaximumFinder
+    public class MaximumFinder
     { 
         public int FindMax(int[] inputArrary, int index = 0, int tmpMaxVal = Int32.MinValue)
         {
