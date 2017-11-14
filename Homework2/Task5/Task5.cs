@@ -18,7 +18,7 @@ namespace Task5
         }
     }
 
-    class FilterLucky
+    public class FilterLucky
     {
         public int[] Filter(int[] inputArray)
         {
@@ -30,7 +30,7 @@ namespace Task5
                     outputArray.Add(inputArray[y]);
                 }
             }
-            return outputArray.ToArray<int>();
+            return  outputArray.Count !=0 ? outputArray.ToArray<int>(): null;
         }
     }
 

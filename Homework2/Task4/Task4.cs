@@ -16,7 +16,7 @@ namespace Task4
         }
     }
 
-    class StringConcatenator
+    public class StringConcatenator
     {
         public string Concatenate(string firstString, string secondString)
         {
