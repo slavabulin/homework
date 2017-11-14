@@ -27,12 +27,13 @@ namespace Task1
         /// Two integer signed numbers and two positions of bits i and j (i less than j) are given. 
         /// Implement an algorithm for inserting one number into another so that the second number
         /// occupies the position from bit j to bit i (bits are numbered from right to left).
-        public int InsertBits(int firstNumber, int secondNumber, int firstIndex, int lastIndex)
+        public int? InsertBits(int firstNumber, int secondNumber, int firstIndex, int lastIndex)
         {
             uint insertTo, insertFrom;
             if (lastIndex < firstIndex
                 || lastIndex > 31
-                || firstIndex < 0) return 0;
+                || firstIndex < 0
+                || firstIndex == lastIndex) return null;
 
             insertFrom = ((uint)secondNumber >> firstIndex) << firstIndex;
             insertFrom = (insertFrom << (31 - lastIndex));

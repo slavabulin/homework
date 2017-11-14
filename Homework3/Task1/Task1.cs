@@ -36,7 +36,7 @@ namespace Task1
     }
 
    
-    class NewtonAlgorithm
+    public class NewtonAlgorithm
     {
         double accuracy;
         public NewtonAlgorithm(double accuracy)

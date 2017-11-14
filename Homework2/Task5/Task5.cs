@@ -14,23 +14,37 @@ namespace Task5
         static void Main(string[] args)
         {
             FilterLucky fl = new FilterLucky();
-            int[] result = fl.Filter(new int[] { 1, 2, 3, 4, 5, 6, 7, 68, 69, 70, 15, 17 });
+            List<int> result = fl.Filter(new List<int> { 1, 2, 3, 4, 5, 6, 7, 68, 69, 70, 15, 17 });
         }
     }
 
     public class FilterLucky
     {
-        public int[] Filter(int[] inputArray)
+        //public int[] Filter(int[] inputArray)
+        //{
+        //    List<int> outputArray = new List<int>();
+        //    for (int y = 0; y < inputArray.Length; y++)
+        //    {
+        //        if (inputArray[y].ToString().Contains('7'))
+        //        {
+        //            outputArray.Add(inputArray[y]);
+        //        }
+        //    }
+        //    return  outputArray.Count !=0 ? outputArray.ToArray<int>(): null;
+        //}
+
+        public List<int> Filter(List<int> inputData)
         {
-            List<int> outputArray = new List<int>();
-            for (int y = 0; y < inputArray.Length; y++)
+            if (inputData == null) return null;
+            List<int> outputData = new List<int>();
+            for (int y = 0; y < inputData.Count; y++)
             {
-                if (inputArray[y].ToString().Contains('7'))
+                if (inputData[y].ToString().Contains('7'))
                 {
-                    outputArray.Add(inputArray[y]);
+                    outputData.Add(inputData[y]);
                 }
             }
-            return  outputArray.Count !=0 ? outputArray.ToArray<int>(): null;
+            return outputData;
         }
     }
 
