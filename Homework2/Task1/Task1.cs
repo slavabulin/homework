@@ -14,15 +14,15 @@ namespace Task1
             
             //bitIns.InsertBits(195, 127, 2, 6); //should be 255
             //bitIns.InsertBits(195, -1, 2, 6); //should be 255
-            bitIns.InsertBits(-1, 0, 2, 6);  //61
-            bitIns.InsertBits(0, -1, 0, 32);  //-1
-
+            //bitIns.InsertBits(-1, 0, 2, 6);  //61
+            //bitIns.InsertBits(0, -1, 0, 31);  //-1
+            bitIns.InsertBits(-1, 0, 0, 31); //0
         }
 
         
     }
 
-    class BitInserter
+    public class BitInserter
     {
         /// Two integer signed numbers and two positions of bits i and j (i less than j) are given. 
         /// Implement an algorithm for inserting one number into another so that the second number
