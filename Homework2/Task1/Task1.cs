@@ -31,15 +31,13 @@ namespace Task1
         {
             uint insertTo, insertFrom;
             if (lastIndex < firstIndex
-                || lastIndex > 31
+                || lastIndex > 32
                 || firstIndex < 0) return 0;
 
             insertFrom = ((uint)secondNumber >> firstIndex) << firstIndex;
-            insertFrom = (insertFrom << (31 - lastIndex));
-            insertFrom = (insertFrom >> (31 - lastIndex));
-            insertTo = ((uint)firstNumber >> (lastIndex))>>1;
-            insertTo = (insertTo << lastIndex)<<1;
-            insertTo |= (((uint)firstNumber << (31 - firstIndex) << 1) >> (31 - firstIndex) >> 1);
+            insertFrom = (insertFrom << (32 - lastIndex));
+            insertFrom = (insertFrom >> (32 - lastIndex));
+            insertTo = (((uint)firstNumber >> lastIndex) << lastIndex)|(((uint)firstNumber << (32 - firstIndex)) >> (32-firstIndex));
 
             int retVal = (int)(insertFrom | insertTo);
             return retVal;
