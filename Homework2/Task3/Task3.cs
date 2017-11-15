@@ -24,17 +24,17 @@ namespace Task3
     }
 
     public class SumChecker
-    { 
+    {
         public int Check(int[] inputArray)
         {
             int dataLenght = inputArray.Length;
             DataElement[] dataArray = new DataElement[dataLenght];
-            for (int i = 0; i < dataLenght;i++ )
+            for (int i = 0; i < dataLenght; i++)
             {
                 dataArray[i] = new DataElement();
                 dataArray[i].arrayItem = inputArray[i];
 
-                if(i >= 1)
+                if (i >= 1)
                 {
                     dataArray[i].sumLeft = dataArray[i - 1].sumLeft + dataArray[i - 1].arrayItem;
                 }
@@ -48,10 +48,9 @@ namespace Task3
 
                 if (dataArray[t].sumRight == dataArray[t].sumLeft) return t;
             }
-                return -1;
+            return -1;
         }
     }
-
     class DataElement
     {
         public int arrayItem;

@@ -44,7 +44,7 @@ namespace Task5
                     outputData.Add(inputData[y]);
                 }
             }
-            return outputData;
+            return outputData.Count == 0 ? null : outputData;
         }
     }
 
