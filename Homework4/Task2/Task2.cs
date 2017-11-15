@@ -14,7 +14,7 @@ namespace Task2
     /// Stein algorithm (Euclid's binary algorithm) to calculate GCD of two, three, etc. of integers. These methods should be
     /// able to determine the GCD calculation time too.
     /// </summary>
-    class Program
+    class Task2
     {
         static void Main(string[] args)
         {
@@ -28,7 +28,7 @@ namespace Task2
         }
     }
     
-    class EuclidAlgorithm
+    public class EuclidAlgorithm
     {
         public delegate uint CalculateDelegate(uint firstNumber, uint secondNumber);
         public Tuple<uint, TimeSpan> CalculateGCD(Algorithm alg, params uint[] numbers) 
@@ -85,7 +85,7 @@ namespace Task2
             return CalculateBinaryWay((secondNumber - firstNumber) >> 1, firstNumber);
         }
     }
-    enum Algorithm
+    public enum Algorithm
     {
         Euclid,
         Stein

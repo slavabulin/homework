@@ -12,7 +12,7 @@ namespace Task3
     /// name.SayHello() --> "Hello, Kathy!"
     /// name.SayGoodbye() --> "Goodbye, Kathy. See you again soon!"
     /// </summary>
-    class Program
+    class Task3
     {
         static void Main(string[] args)
         {

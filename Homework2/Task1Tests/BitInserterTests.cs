@@ -21,7 +21,7 @@ namespace Task1Tests
             int lastIndex = 31;
             int firstNumber = -1;
             int secondNumber = 0;
-            int retVal;
+            int? retVal;
             
             //act
             retVal = bi.InsertBits(firstNumber, secondNumber, firstIndex, lastIndex);
@@ -37,7 +37,7 @@ namespace Task1Tests
             int lastIndex = 31;
             int firstNumber = -1;
             int secondNumber = -1;
-            int retVal;
+            int? retVal;
 
             //act
             retVal = bi.InsertBits(firstNumber, secondNumber, firstIndex, lastIndex);
@@ -53,13 +53,29 @@ namespace Task1Tests
             int lastIndex = 15;
             int firstNumber = -1;
             int secondNumber = 0;
-            int retVal;
+            int? retVal;
 
             //act
             retVal = bi.InsertBits(firstNumber, secondNumber, firstIndex, lastIndex);
 
             //assert
             Assert.AreEqual(-65536, retVal);
+        }
+        [TestMethod]
+        public void InsertBitsBothIndexesAreEqualShouldReturnNull()
+        {
+            //arrange
+            int firstIndex = 0;
+            int lastIndex = 0;
+            int firstNumber = -1;
+            int secondNumber = 0;
+            int? retVal;
+
+            //act
+            retVal = bi.InsertBits(firstNumber, secondNumber, firstIndex, lastIndex);
+
+            //assert
+            Assert.IsNull(retVal);
         }
     }
 }

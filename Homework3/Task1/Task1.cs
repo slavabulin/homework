@@ -46,6 +46,10 @@ namespace Task1
 
         public double CalculateRoot(double number, uint degree, double prevRoot = 1)
         {
+            if (number == 1) return 1;
+            if(number==0 && degree ==0) return 1;
+            if (number == 0 && degree != 0) return 0;
+            
             double prevRootPow = CalculatePower(prevRoot, (degree - 1));
             double curRoot =  ((degree - 1) * prevRoot + number / prevRootPow);
             curRoot /= degree;

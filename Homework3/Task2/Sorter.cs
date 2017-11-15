@@ -50,6 +50,7 @@ namespace Task2
         }
         public static int[] GetKey(int[,]inputArray, Order order)
         {
+            if (inputArray == null || inputArray.Length == 0) return null;
             int colLastIndex = inputArray.GetUpperBound(1);
             int rowLastIndex = inputArray.GetUpperBound(0);
             int[] key = new int[rowLastIndex + 1];
