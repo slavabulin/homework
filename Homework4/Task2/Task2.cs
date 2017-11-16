@@ -33,6 +33,7 @@ namespace Task2
         public delegate uint CalculateDelegate(uint firstNumber, uint secondNumber);
         public Tuple<uint, TimeSpan> CalculateGCD(Algorithm alg, params uint[] numbers) 
         {
+            if (numbers == null) throw new ArgumentNullException();
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -65,7 +66,7 @@ namespace Task2
                 return firstNumber;
         }
 
-        public uint CalculateBinaryWay(uint firstNumber, uint secondNumber)
+        uint CalculateBinaryWay(uint firstNumber, uint secondNumber)
         {
             if (secondNumber == firstNumber) return firstNumber;
             if (firstNumber == 0) return secondNumber;

@@ -8,8 +8,9 @@ namespace Task2
 {
     public static class Sorter
     {
-        public static void SwapRows(ref int[,] inputArray, int firstRow, int secondRow)
+        public static void SwapRows(ref int[,] inputArray, uint firstRow, uint secondRow)
         {
+            if (inputArray == null) throw new ArgumentNullException();
             int tmpVar;
             int colLastIndex = inputArray.GetUpperBound(1);
             for (int i = 0; i <= colLastIndex; i++)
@@ -25,9 +26,12 @@ namespace Task2
             bool orderCondition;
             int tmpVar;
 
-            for (int i = 0; i < key.Length - 1; i++)
+            if (inputArray == null
+                || key==null) throw new ArgumentNullException();
+
+            for (uint i = 0; i < key.Length - 1; i++)
             {
-                for (int j = 0; j < key.Length - i - 1; j++)
+                for (uint j = 0; j < key.Length - i - 1; j++)
                 {
                     if (order == Order.increase)
                     {

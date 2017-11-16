@@ -61,8 +61,8 @@ namespace Task2.Tests
         public void SwapRowsNullAsInputArrayShoulThrowArgNullExcptn()
         {
             //arrange
-            int firstRow = 0;
-            int secondRow = 15;
+            uint firstRow = 0;
+            uint secondRow = 15;
             //act
             Sorter.SwapRows(ref inputArray, firstRow, secondRow);
             //assert
@@ -73,8 +73,8 @@ namespace Task2.Tests
             //arrange
             int[,] inputArray = new int[,] { { 0, 1, 2, 3 }, { 3, 4, 5, 6 } };
             int[,] expectedArray = new int[,] { { 0, 1, 2, 3 }, { 3, 4, 5, 6 } };
-            int firstRow = 0;
-            int secondRow = 0;
+            uint firstRow = 0;
+            uint secondRow = 0;
             //act
             Sorter.SwapRows(ref inputArray, firstRow, secondRow);
             //assert
@@ -92,8 +92,8 @@ namespace Task2.Tests
         {
             //arrange
             int[,] inputArray = new int[,] { { 0, 1, 2, 3 }, { 3, 4, 5, 6 } };            
-            int firstRow = 0;
-            int secondRow = 1252;
+            uint firstRow = 0;
+            uint secondRow = 1252;
             //act
             Sorter.SwapRows(ref inputArray, firstRow, secondRow);
             //assert
@@ -133,6 +133,28 @@ namespace Task2.Tests
                     Assert.AreEqual(expectedArray[i, j], inputArray[i, j]);
                 }
             }
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SortRowsByKeyInputNullShouldThrowArgNullExcptn()
+        {
+            //arrange
+            int[,] inputArray = null;
+            int[] key = new int[] { 0, 3 };
+            //act
+            Sorter.SortRowsByKey(ref inputArray, key, Order.increase);
+            //assert
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SortRowsByKeyInputKeyNullShouldThrowArgNullExcptn()
+        {
+            //arrange
+            int[,] inputArray = new int[,] { { 0, 1, 2, 3 }, { 3, 4, 5, 6 } };
+            int[] key = null;// new int[] { 0, 3 };
+            //act
+            Sorter.SortRowsByKey(ref inputArray, key, Order.increase);
+            //assert
         }
     }
 }
