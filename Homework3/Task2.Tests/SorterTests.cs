@@ -57,8 +57,8 @@ namespace Task2.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void SwapRowsNullAsInputArrayShoulThrowNRE()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SwapRowsNullAsInputArrayShoulThrowArgNullExcptn()
         {
             //arrange
             int firstRow = 0;
