@@ -11,13 +11,13 @@ namespace Task2
         static void Main(string[] args)
         {
             MaximumFinder mf = new MaximumFinder();
-            int a = mf.FindMax(new[] {1,2,5,0,3,-1255,-1});
+            int a = mf.Find(new[] {1,2,5,0,3,-1255,-1});
         }
     }
 
     public class MaximumFinder
     { 
-        public int FindMax(int[] inputArrary, int index = 0, int tmpMaxVal = Int32.MinValue)
+        int FindMax(int[] inputArrary, int index = 0, int tmpMaxVal = Int32.MinValue)
         {
             if(inputArrary[index] > tmpMaxVal)
             {
@@ -30,6 +30,11 @@ namespace Task2
             }
 
             return tmpMaxVal;
+        }
+
+        public int Find(int[]inputArray)
+        {
+            return FindMax(inputArray);
         }
     }
 }
