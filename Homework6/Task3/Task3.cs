@@ -23,21 +23,23 @@ namespace Task3
         int[] coefficents;
         public Polynomial(params int[] coefficents)
         {
-            if (coefficents == null) throw new ArgumentNullException();
+            if (coefficents == null) throw new ArgumentNullException("coefficents","null passed as input parameter");
             this.coefficents = coefficents;
         }
 
         public static Polynomial operator +(Polynomial polynomial1, Polynomial polynomial2)
         {
-            return Operatepolynomiales(polynomial1, polynomial2, Operation.sum);
+            return OperatePolynomiales(polynomial1, polynomial2, Operation.sum);
         }
         public static Polynomial operator -(Polynomial polynomial1, Polynomial polynomial2)
         {
-            return Operatepolynomiales(polynomial1, polynomial2, Operation.sub);
+            return OperatePolynomiales(polynomial1, polynomial2, Operation.sub);
         }
         public override bool Equals(object obj)
         {
-            if (obj == null) throw new ArgumentNullException();
+            if (obj == null) return false;
+            if (GetType() != obj.GetType()) return false; 
+
             Polynomial inputVal = (obj as Polynomial);
             if (inputVal.coefficents.Length != this.coefficents.Length) return false;
             for (int i = 0; i < this.coefficents.Length;i++ )
@@ -48,7 +50,15 @@ namespace Task3
         }
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            int hash = 17;
+            unchecked
+            {
+                for (int i = 0; i < coefficents.Length; i++)
+                {
+                    hash = hash * 23 + coefficents[i].GetHashCode();
+                }
+            }
+            return hash;
         }
         public override string ToString()
         {
@@ -65,35 +75,39 @@ namespace Task3
         {
             return (polynomial1.coefficents.Length <= polynomial2.coefficents.Length) ? polynomial1 : polynomial2;
         }
-        static Polynomial Operatepolynomiales(Polynomial polynomial1, Polynomial polynomial2, Operation operation)
+        static Polynomial OperatePolynomiales(Polynomial polynomial1, Polynomial polynomial2, Operation operation)
         {
             int shortLength, longLength;
-            Polynomial shorterpolynomial = GetShorterOrFirstpolynomial(polynomial1, polynomial2);
-            Polynomial longerpolynomial = shorterpolynomial.Equals(polynomial1) ? polynomial2 : polynomial1;
+            Polynomial shorterPolynomial = GetShorterOrFirstpolynomial(polynomial1, polynomial2);
+            Polynomial longerPolynomial = shorterPolynomial.Equals(polynomial1) ? polynomial2 : polynomial1;
 
-            longLength = longerpolynomial.coefficents.Length;
-            shortLength = shorterpolynomial.coefficents.Length;
+            longLength = longerPolynomial.coefficents.Length;
+            shortLength = shorterPolynomial.coefficents.Length;
 
-            Polynomial retVal = new Polynomial(new int[longerpolynomial.coefficents.Length]);
+            Polynomial retVal = new Polynomial(new int[longerPolynomial.coefficents.Length]);
             for (int i = 0; i < longLength; i++)
             {
-                if(operation == Operation.sum)
+                switch (operation)
                 {
-                    retVal.coefficents[i] = longerpolynomial.coefficents[i];
-                    if (i < shortLength)
-                    {
-                        retVal.coefficents[i] += shorterpolynomial.coefficents[i];
-                    }
+                    case Operation.sum:
+                        retVal.coefficents[i] = longerPolynomial.coefficents[i];
+                        if (i < shortLength)
+                        {
+                            retVal.coefficents[i] += shorterPolynomial.coefficents[i];
+                        }
+                        break;
+
+                    case Operation.sub:
+                        if (i < polynomial1.coefficents.Length)
+                        {
+                            retVal.coefficents[i] += polynomial1.coefficents[i];
+                        }
+                        retVal.coefficents[i] -= polynomial2.coefficents[i];
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("Operation", "Unexpected operation type");
                 }
-                else
-                {
-                    if (i < polynomial1.coefficents.Length)
-                    {
-                        retVal.coefficents[i] += polynomial1.coefficents[i];
-                    }
-                    retVal.coefficents[i] -= polynomial2.coefficents[i];
-                }
-                
+
             }
             return retVal;
         }
