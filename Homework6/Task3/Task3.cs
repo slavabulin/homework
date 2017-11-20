@@ -23,7 +23,7 @@ namespace Task3
         int[] coefficents;
         public Polynomial(params int[] coefficents)
         {
-            if (coefficents == null) throw new ArgumentNullException("coefficents","null passed as input parameter");
+            if (coefficents == null) throw new ArgumentNullException(nameof(coefficents),"null passed as input parameter");
             this.coefficents = coefficents;
         }
 
@@ -105,7 +105,7 @@ namespace Task3
                         retVal.coefficents[i] -= polynomial2.coefficents[i];
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("Operation", "Unexpected operation type");
+                        throw new ArgumentOutOfRangeException(nameof(operation), "Unexpected operation type");
                 }
 
             }
