@@ -71,14 +71,14 @@ namespace Task3
         /// <param name="polynomial1">first polynomial to compare</param>
         /// <param name="polynomial2">second polynomial to compare</param>
         /// <returns></returns>
-        static Polynomial GetShorterOrFirstpolynomial(Polynomial polynomial1, Polynomial polynomial2)
+        static Polynomial GetShorterOrFirstPolynomial(Polynomial polynomial1, Polynomial polynomial2)
         {
             return (polynomial1.coefficents.Length <= polynomial2.coefficents.Length) ? polynomial1 : polynomial2;
         }
         static Polynomial OperatePolynomiales(Polynomial polynomial1, Polynomial polynomial2, Operation operation)
         {
             int shortLength, longLength;
-            Polynomial shorterPolynomial = GetShorterOrFirstpolynomial(polynomial1, polynomial2);
+            Polynomial shorterPolynomial = GetShorterOrFirstPolynomial(polynomial1, polynomial2);
             Polynomial longerPolynomial = shorterPolynomial.Equals(polynomial1) ? polynomial2 : polynomial1;
 
             longLength = longerPolynomial.coefficents.Length;

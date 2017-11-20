@@ -30,7 +30,7 @@ namespace Task2
         public double radius;
         public Circle(double radius)
         {
-            if (radius <= 0) throw new ArgumentOutOfRangeException();
+            if (radius <= 0) throw new ArgumentOutOfRangeException("radius", "should be more than zero");
             this.radius = radius;
         }
 
@@ -49,9 +49,8 @@ namespace Task2
         double width;
         public Rectangle(double height, double width)
         {
-            if (height <= 0
-                || width <= 0)
-                throw new ArgumentOutOfRangeException();
+            if (height <= 0)throw new ArgumentOutOfRangeException("height", "should be more than zero");
+            if (width <= 0) throw new ArgumentOutOfRangeException("width", "should be more than zero");
             this.height = height;
             this.width = width;
         }
@@ -70,17 +69,7 @@ namespace Task2
         public readonly double sideSize;  
         public Square(double sideSize):base(sideSize, sideSize)
         {
-        }
-
-        //public override double calculateSquare()
-        //{
-        //    //return base.calculateSquare(sideSize,sideSize);
-        //}
-        //public override double calculatePerimeter()
-        //{
-        //    return base.calculatePerimeter();
-        //}
-        
+        }        
     }
 
     public class Triangle:Shape
@@ -88,10 +77,9 @@ namespace Task2
         public readonly double sideA, sideB, sideC;
         public Triangle(double sideA, double sideB, double sideC)
         {
-            if (sideA <= 0
-                || sideB <= 0
-                || sideC <= 0)
-                throw new ArgumentOutOfRangeException("argument should be more than zero");
+            if (sideA <= 0)throw new ArgumentOutOfRangeException("sideA","argument should be more than zero");
+            if (sideB <= 0)throw new ArgumentOutOfRangeException("sideB","argument should be more than zero");
+            if (sideC <= 0) throw new ArgumentOutOfRangeException("sideC", "argument should be more than zero");
 
             this.sideA = sideA;
             this.sideB = sideB;
