@@ -26,12 +26,14 @@ namespace Task6
             if (String.IsNullOrWhiteSpace(secondNum)) throw new ArgumentNullException(nameof(secondNum));
 
             int optional = 0, retVal ;
+
+            sb.Clear();
             int highLenght = firstNum.Length >= secondNum.Length ? firstNum.Length : secondNum.Length;
             for (int i=0; i<highLenght;i++)
             {
                 int firstElem = (firstNum.Length - i > 0) ? Int32.Parse(firstNum[firstNum.Length - i -1].ToString()) : 0;
                 int secondElem = (secondNum.Length - i > 0) ? Int32.Parse(secondNum[secondNum.Length - i -1].ToString()) : 0;
-                retVal = ElemSummer(firstElem, secondElem, optional);
+                retVal = firstElem + secondElem + optional;
 
                 if (retVal > 9)
                 {
@@ -55,7 +57,5 @@ namespace Task6
             }
             return sb.ToString();
         }
-
-        int ElemSummer(int firstElem, int secondElem, int optional = 0) => firstElem + secondElem + optional;
     }
 }

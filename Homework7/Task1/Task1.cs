@@ -40,8 +40,8 @@ namespace Task1
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
-					this._name = value;
+                if (String.IsNullOrEmpty(value)) throw new ArgumentException("argument is null or empty string", nameof(value));
+                _name = value;
 			}
 		}
         public double Revenue
@@ -52,12 +52,10 @@ namespace Task1
 			}
 			set
 			{
-				if (!Double.IsNaN(value)
-					||!Double.IsNegativeInfinity(value)
-					||!Double.IsPositiveInfinity(value)
-					||!Double.IsInfinity(value)
-					)
-					this._revenue = value;
+                if (Double.IsNaN(value)
+                    || Double.IsInfinity(value)
+                    ) throw new ArgumentException("argument in NaN or Infinity", nameof(value));
+                _revenue = value;
 			}
 		}
 		public string ContactPhone
@@ -68,19 +66,19 @@ namespace Task1
 			}
 			set
 			{
-				if (!String.IsNullOrEmpty(value))
-					this._contactPhone = value;
-			}
+				if (String.IsNullOrEmpty(value)) throw new ArgumentException("argument is null or empty string", nameof(value));
+                _contactPhone = value;
+            }
 		}
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (formatProvider != null)
             {
-                ICustomFormatter formatter = formatProvider.GetFormat(this.GetType()) as ICustomFormatter;
-                if (formatter != null) return formatter.Format(format, this, formatProvider);
+                if (formatProvider.GetFormat(this.GetType()) is ICustomFormatter formatter) return formatter.Format(format, this, formatProvider);
             }
-            if (format == null) format = "\0";
+            //if (format == null) format = "\0";
+            if (format == null) format = String.Empty;
             var sb = new StringBuilder();
             sb.Append("Customer record: ");
             foreach(char c in format)
@@ -102,7 +100,7 @@ namespace Task1
                     default:
                         sb.Append(this.Name);
                         sb.Append(" ");
-                        sb.Append(this.Revenue.ToString());
+                        sb.Append(this.Revenue);
                         sb.Append(" ");
                         sb.Append(this.ContactPhone);
                         break;
@@ -112,96 +110,6 @@ namespace Task1
             return sb.ToString();
         }
     }
-
-    public class CustomerFormatter : IFormatProvider, ICustomFormatter
-    {
-        public string Format(string format, object arg, IFormatProvider formatProvider)
-        {
-            switch (format)
-            {
-                default: return arg.ToString();
-            }
-        }
-
-        public object GetFormat(Type formatType)
-        {
-            if (formatType == typeof(ICustomFormatter))
-            {
-                return this;
-            }
-            else
-            {
-                return CultureInfo.CurrentCulture.
-                        GetFormat(formatType);
-            }
-        }
-    } 
+    
 }
 
-
-/*public class Customer : IFormattable
-    {
-        public Customer(string name, decimal revenue, string contactPhone)
-        {
-            Name = name;
-            Revenue = revenue;
-            ContactPhone = contactPhone;
-        }
-
-        public string Name { get; set; }
-
-        public decimal Revenue { get; set; }
-
-        public string ContactPhone { get; set; }
-
-        /// <summary>
-        ///     Returns formated string representing customer
-        ///     r - revenue
-        ///     p - phone
-        ///     n - name
-        ///     Combos are accepted
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="formatProvider"></param>
-        /// <returns>Formated string</returns>
-        public string ToString(string format, IFormatProvider formatProvider = null)
-        {
-            if (formatProvider != null)
-            {
-                var fmt = formatProvider.GetFormat(
-                        GetType())
-                    as ICustomFormatter;
-                if (fmt != null)
-                    return fmt.Format(format, this, formatProvider);
-            }
-            var ret = new StringBuilder();
-            for (var i = 0; i < format.Length; i++)
-            {
-                if (i != 0)
-                    ret.Append(" ");
-
-                switch (format[i])
-                {
-                    case 'n':
-                        ret.Append($"{Name}");
-                        break;
-                    case 'p':
-                        ret.Append($"{ContactPhone}");
-                        break;
-                    case 'r':
-                        ret.Append(Revenue.ToString("N2"));
-                        break;
-                    case 'G':
-                        ret.Append($"{Name}");
-                        break;
-                    default:
-                        ret.Append($"{Name}");
-                        break;
-                }
-
-                if (i + 1 < format.Length)
-                    ret.Append(",");
-            }
-            return ret.ToString();
-        }
-    }*/
