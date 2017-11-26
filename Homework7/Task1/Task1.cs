@@ -77,7 +77,6 @@ namespace Task1
             {
                 if (formatProvider.GetFormat(this.GetType()) is ICustomFormatter formatter) return formatter.Format(format, this, formatProvider);
             }
-            //if (format == null) format = "\0";
             if (format == null) format = String.Empty;
             var sb = new StringBuilder();
             sb.Append("Customer record: ");
@@ -90,7 +89,7 @@ namespace Task1
                         sb.Append(" ");
                         break;
                     case 'R':
-                        sb.Append(this.Revenue.ToString());
+                        sb.Append(this.Revenue);
                         sb.Append(" ");
                         break;
                     case 'P':
@@ -105,9 +104,12 @@ namespace Task1
                         sb.Append(this.ContactPhone);
                         break;
                 }
-            }
-            
+            }            
             return sb.ToString();
+        }
+        public override string ToString()
+        {
+            return this.ToString("G", CultureInfo.CurrentCulture);
         }
     }
     

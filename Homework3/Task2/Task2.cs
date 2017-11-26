@@ -21,9 +21,9 @@ namespace Task2
         {
             int[,] arrayToSort = new int[,] { { 0, 1, 2, 3 }, { -10, 3, 75, -15 }, { 1, 4, 3, 2 } };
             //GlobalSorter gSorter = new GlobalSorter(new SumOfElementSorter(arrayToSort));
-            //GlobalSorter gSorter = new GlobalSorter(new MaximumOfElementSorter(arrayToSort));
+            GlobalSorter gSorter = new GlobalSorter(new MaximumOfElementSorter(arrayToSort));
             //GlobalSorter gSorter = new GlobalSorter(new MinimumOfElementSorter(arrayToSort));
-            //gSorter.SortDecrease();
+            gSorter.SortDecrease();
             //gSorter.SortIncrease();
 
 

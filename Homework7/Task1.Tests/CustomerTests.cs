@@ -23,7 +23,7 @@ namespace Task1.Tests
             string retVal;
             string expectedVal = "Customer record: Jhon Doe 1000000 +123456789";
             //act
-            retVal = String.Format("{0}", customer);
+            retVal = customer.ToString();
             //assert
             Assert.AreEqual(expectedVal, retVal);
         }
