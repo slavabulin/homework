@@ -24,36 +24,22 @@ namespace Task2
         {
             if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath), "argument should not be null or empty oe white space");
 
-            var outDict = new Dictionary<string, int>();
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            var outDict = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
+            using(var st = new StreamReader(filePath))
             {
-                byte[] bytes = new byte[fs.Length];
-                int numBytesToRead = (int)fs.Length;
-                int numBytesRead = 0;
-                while (numBytesToRead > 0)
+                var wordsArr = st.ReadToEnd().Split(new char[] { ' ', ',', '.' });
+             
+                foreach (string word in wordsArr)
                 {
-                    int n = fs.Read(bytes, numBytesRead, numBytesToRead);
-                    if (n == 0) break;
-                    numBytesRead += n;
-                    numBytesToRead -= n;
-                }
-                
-                var wordsArr = Encoding.Unicode.GetString(bytes).ToLower().Split(new char[] { ' ', ',', '.' });
-                foreach(string word in wordsArr)
-                {
-                    
-                    if(outDict.ContainsKey(word))
+                    if (outDict.TryGetValue(word, out int val))
                     {
-                        int val;
-                        outDict.TryGetValue(word, out val);
-                        outDict.Remove(word);
-                        outDict.Add(word, ++val);
+                        outDict[word] = ++val;
                     }
                     else
                     {
                         outDict.Add(word, 1);
                     }
-                    
+
                 }
             }
             return outDict;

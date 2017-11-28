@@ -21,6 +21,7 @@ namespace Task1
         public int? Search(T[] inputData, T value)
         {
             if (inputData == null
+                ||inputData.Length == 0
                 || value.CompareTo(inputData[0]) < 0
                 || value.CompareTo(inputData[inputData.Length-1]) > 0
                 ) return null;
@@ -32,7 +33,8 @@ namespace Task1
             while(firstIndex < lastIndex)
             {
                 midIndex = firstIndex + (lastIndex - firstIndex) / 2;
-                if (value.CompareTo(inputData[midIndex]) <= 0) lastIndex = midIndex;
+                if (value.CompareTo(inputData[midIndex]) == 0) return midIndex;
+                if (value.CompareTo(inputData[midIndex]) < 0) lastIndex = midIndex;
                 else firstIndex = midIndex + 1;
             }
             return (inputData[lastIndex].CompareTo(value) == 0) ? (int?)lastIndex : null;

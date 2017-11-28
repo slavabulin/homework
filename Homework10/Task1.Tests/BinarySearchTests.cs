@@ -71,5 +71,57 @@ namespace Task1.Tests
             //assert
             Assert.AreEqual<int?>(expectedVal, retVal);
         }
+        [TestMethod]
+        public void SearchInEmptyArrOutNull()
+        {
+            //arrange
+            var bs = new BinarySearch<int>();
+            int[] intArr = new int[] { };
+            int? retVal;
+            int? expectedVal = null;
+            //act
+            retVal = bs.Search(intArr, 100);
+            //assert
+            Assert.AreEqual<int?>(expectedVal, retVal);
+        }
+        [TestMethod]
+        public void SearchIn2_3_6_9_and_2Out0()
+        {
+            //arrange
+            var bs = new BinarySearch<int>();
+            int[] intArr = new int[] { 2, 3, 6, 9 };
+            int? retVal;
+            int? expectedVal = 0;
+            //act
+            retVal = bs.Search(intArr, 2);
+            //assert
+            Assert.AreEqual<int?>(expectedVal, retVal);
+        }
+        [TestMethod]
+        public void SearchIn2_3_6_9_and_9_Out3()
+        {
+            //arrange
+            var bs = new BinarySearch<int>();
+            int[] intArr = new int[] { 2, 3, 6, 9 };
+            int? retVal;
+            int? expectedVal = 3;
+            //act
+            retVal = bs.Search(intArr, 9);
+            //assert
+            Assert.AreEqual<int?>(expectedVal, retVal);
+        }
+        [TestMethod]
+        public void SearchIn2_3_6_9_and_1_Out_Null()
+        {
+            //arrange
+            var bs = new BinarySearch<int>();
+            int[] intArr = new int[] { 2, 3, 6, 9 };
+            int? retVal;
+            int? expectedVal = null;
+            //act
+            retVal = bs.Search(intArr, 1);
+            //assert
+            Assert.AreEqual<int?>(expectedVal, retVal);
+        }
     }
 }
