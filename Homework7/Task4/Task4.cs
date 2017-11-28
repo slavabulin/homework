@@ -28,21 +28,13 @@ namespace Task4
         public List<T> UniqueInOrder(IEnumerable<T> inData)
         {
             if (inData == null) throw new ArgumentNullException(nameof(inData));
-            
-            IEnumerator<T> enumInData;
-            List<T> outData = new List<T>();
-            enumInData = inData.GetEnumerator();
 
-            while (enumInData.MoveNext())
+            List<T> outData = new List<T>();            
+            foreach(T elem in inData)
             {
-                if (outData.Count == 0) outData.Add(enumInData.Current);
-                if (enumInData.Current.Equals(outData.Last()))
+                if (!outData.LastOrDefault().Equals(elem))
                 {
-                    continue;
-                }
-                else
-                {
-                    outData.Add(enumInData.Current);
+                    outData.Add(elem);
                 }
             }
             if (outData.Count == 0) throw new ArgumentException("incomming data length is zero", nameof(inData));

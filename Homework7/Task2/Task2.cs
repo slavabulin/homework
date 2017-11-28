@@ -49,7 +49,7 @@ namespace Task2
                 stringLowCaseList = new List<string>();
             }
             
-            List<string> originStrList = originStr.Split().ToList<string>();
+            string[] originStrList = originStr.Split();
             var sb = new StringBuilder();
             bool flagWordAdded = false;
 
@@ -73,7 +73,7 @@ namespace Task2
                 }
                 flagWordAdded = false;
             }
-            return sb.ToString().TrimEnd();
+            return sb.Remove(sb.Length-1, 1).ToString();
         }
     }
 

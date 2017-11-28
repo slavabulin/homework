@@ -32,7 +32,7 @@ namespace Task3
         public string AddOrChangeUrlParameter(string url, string keyValParam)
         {
             if (url == null) throw new ArgumentNullException(nameof(url), "argument should not be null");
-            var sb = new StringBuilder();
+            
             if (String.IsNullOrWhiteSpace(keyValParam)) return url;
 
             string[] urlArr = url.Split('?');
@@ -41,7 +41,6 @@ namespace Task3
             string domainName = urlArr[0];
 
             var urlParamDict = new Dictionary<string, string>();
-            var inParamDict = new Dictionary<string, string>();
             string[] urlParamArr ;
 
             if (urlArr.Length >1)
@@ -56,24 +55,22 @@ namespace Task3
             foreach(string keyValStr in urlParamArr)
             {
                 string[] tmpStrArr = keyValStr.Split('=');
-                urlParamDict.Add(tmpStrArr.ElementAt(0), tmpStrArr.ElementAt(1));
+                urlParamDict.Add(tmpStrArr[0], tmpStrArr.ElementAt(1));
             }
             foreach(string keyVal in paramArr)
             {
                 string[] tmpStrArr = keyVal.Split('=');
-                if (urlParamDict.ContainsKey(tmpStrArr.ElementAt(0)))
-                {
-                    urlParamDict.Remove(tmpStrArr.ElementAt(0));
-                }
-                urlParamDict.Add(tmpStrArr.ElementAt(0), tmpStrArr.ElementAt(1));
+                urlParamDict[tmpStrArr[0]] = tmpStrArr[1];
             }
+
+            var sb = new StringBuilder();
             sb.Append(domainName + "?");
             foreach(KeyValuePair<string,string> keyVal in urlParamDict)
             {
                 sb.Append(keyVal.Key + '=' + keyVal.Value);
                 sb.Append("&");
             }
-            return sb.ToString().Remove(sb.ToString().Length-1);
+            return sb.Remove(sb.Length-1,1).ToString();
         }
     }
 }
