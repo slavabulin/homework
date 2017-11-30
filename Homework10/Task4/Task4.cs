@@ -61,20 +61,28 @@ namespace Task4
             if (customQueueInstance == null) throw new ArgumentNullException(nameof(customQueueInstance), "argument should not be null");
             _customQueueInstance = customQueueInstance;
         }
-        public T Current
+        public object Current
         {
             get => _customQueueInstance[_currentIndex];
         }
-        public T MoveNext()
+
+        T IEnumerator<T>.Current => throw new NotImplementedException();
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MoveNext()
         {
             _currentIndex++;
             if (_currentIndex < _customQueueInstance.Length)
             {
-                return _customQueueInstance[_currentIndex];
+                return true;
             }
             else
             {
-                return default(T);
+                return false;
             }
         }
         public void Reset()
@@ -93,10 +101,10 @@ namespace Task4
         int Length { get; }
     }
 
-    public interface ICustomQueueEnumerator<out T>
+    public interface ICustomQueueEnumerator<out T>: IEnumerator<T>
     {
-        T Current { get; }
-        T MoveNext();
-        void Reset();
+        new object Current { get; }
+        new bool MoveNext();
+        new void Reset();
     }
 }
