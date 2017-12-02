@@ -11,15 +11,15 @@ namespace Task7.Tests
         public void BinarySearchTreeAdd()
         {
             //arrange
-            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(new Node<int, string>(5));
-            var nodeToAdd1 = new Node<int, string>(1);
-            var nodeToAdd2 = new Node<int, string>(10);
-            var nodeToAdd3 = new Node<int, string>(3);
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(5, null);
+            //var nodeToAdd1 = new Node<int, string>(1);
+            //var nodeToAdd2 = new Node<int, string>(10);
+            //var nodeToAdd3 = new Node<int, string>(3);
             bool expectedVal = true, retVal;
             //act
-            retVal = binSearchTree.Add(nodeToAdd1, binSearchTree.root);
-            binSearchTree.Add(nodeToAdd2, binSearchTree.root);
-            binSearchTree.Add(nodeToAdd3, binSearchTree.root);
+            retVal = binSearchTree.Add(1,null);
+            binSearchTree.Add(10, null);
+            binSearchTree.Add(3, null);
             //assert
             Assert.AreEqual(expectedVal, retVal);
         }
@@ -28,10 +28,9 @@ namespace Task7.Tests
         public void BinarySearchTreeAddInNullShouldThrowExcptn()
         {
             //arrange
-            BinarySearchTree<string, string> binSearchTree = new BinarySearchTree<string, string>(new Node<string, string>("5"));
-            var nodeToAdd1 = new Node<string, string>(null);
+            BinarySearchTree<string, string> binSearchTree = new BinarySearchTree<string, string>("5", null);
             //act
-            binSearchTree.Add(nodeToAdd1, binSearchTree.root);
+            binSearchTree.Add(null, null);
             //assert
 
         }
@@ -40,10 +39,9 @@ namespace Task7.Tests
         public void BinarySearchTreeRemoveInNullShouldThrowExcptn()
         {
             //arrange
-            BinarySearchTree<string, string> binSearchTree = new BinarySearchTree<string, string>(new Node<string, string>("5"));
-            var nodeToAdd1 = new Node<string, string>(null);
+            BinarySearchTree<string, string> binSearchTree = new BinarySearchTree<string, string>("5",null);
             //act
-            binSearchTree.Remove(nodeToAdd1, binSearchTree.root);
+            binSearchTree.Remove(null);
             //assert
 
         }
@@ -51,18 +49,18 @@ namespace Task7.Tests
         public void BinarySearchTreeRemove()
         {
             //arrange
-            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(new Node<int, string>(10));
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10, null);
             bool expectedVal = true, retVal;
             //act
-            retVal = binSearchTree.Add(new Node<int, string>(1), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(15), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(19), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(20), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(18), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(12), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(11), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(13), binSearchTree.root);
-            binSearchTree.Remove(new Node<int, string>(15), binSearchTree.root);
+            retVal = binSearchTree.Add(1, null);
+            binSearchTree.Add(15, null);
+            binSearchTree.Add(19, null);
+            binSearchTree.Add(20, null);
+            binSearchTree.Add(18, null);
+            binSearchTree.Add(12, null);
+            binSearchTree.Add(11, null);
+            binSearchTree.Add(13, null);
+            binSearchTree.Remove(15);
             //assert
             Assert.AreEqual(expectedVal, retVal);
         }
@@ -70,39 +68,29 @@ namespace Task7.Tests
         public void BinarySearchTreeGetValueByKeyIn19OutYahoo()
         {
             //arrange
-            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(new Node<int, string>(10));
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10,null);
             string expectedVal = "yahoo!", retVal;
             //act
-            binSearchTree.Add(new Node<int, string>(1), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(15), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(19, "yahoo!"), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(20), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(18), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(12), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(11), binSearchTree.root);
-            binSearchTree.Add(new Node<int, string>(13), binSearchTree.root);
-            retVal = binSearchTree.GetValueByKey(19, binSearchTree.root);
+            binSearchTree.Add(1, null);
+            binSearchTree.Add(15, null);
+            binSearchTree.Add(19, "yahoo!");
+            binSearchTree.Add(20, null);
+            binSearchTree.Add(18, null);
+            binSearchTree.Add(12, null);
+            binSearchTree.Add(11, null);
+            binSearchTree.Add(13, null);
+            retVal = binSearchTree.GetValueByKey(19);
             //assert
             Assert.AreEqual(expectedVal, retVal);
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void BinarySearchTreeGetValueByKeyInNullShouldThrowExcptn()
-        {
-            //arrange
-            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(new Node<int, string>(10));
-            //act
-            var retVal = binSearchTree.GetValueByKey(123, null);
-            //assert
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void BinarySearchTreeGetValueByKeyInNonExitingKeyShouldThrowExcptn()
         {
             //arrange
-            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(new Node<int, string>(10));
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10,null);
             //act
-            var retVal = binSearchTree.GetValueByKey(123, binSearchTree.root);
+            var retVal = binSearchTree.GetValueByKey(123);
             //assert
         }
 
