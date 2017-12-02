@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Task7;
 
@@ -94,6 +95,83 @@ namespace Task7.Tests
             //assert
         }
 
-
+        [TestMethod]
+        public void BinarySearchTreeTraverseInOrder()
+        {
+            //arrange
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10, null);
+            IEnumerable<int> expectedVal = new int[] { 1, 10, 11, 12, 13, 15, 18, 19, 20 };
+            IEnumerable<int> retVal;
+            //act
+            binSearchTree.Add(1, null);
+            binSearchTree.Add(15, null);
+            binSearchTree.Add(19, null);
+            binSearchTree.Add(20, null);
+            binSearchTree.Add(18, null);
+            binSearchTree.Add(12, null);
+            binSearchTree.Add(11, null);
+            binSearchTree.Add(13, null);
+            retVal = binSearchTree.Traverse(TraverseOrder.inorder);
+            //assert
+            IEnumerator<int> enumExpectedVal = expectedVal.GetEnumerator();
+            IEnumerator<int> enumRetVal = retVal.GetEnumerator();
+            while (enumExpectedVal.MoveNext())
+            {
+                enumRetVal.MoveNext();
+                Assert.AreEqual(enumExpectedVal.Current, enumRetVal.Current);
+            }
+        }
+        [TestMethod]
+        public void BinarySearchTreeTraversePostOrder()
+        {
+            //arrange
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10, null);
+            IEnumerable<int> expectedVal = new int[] { 1, 11, 13, 12, 18, 20, 19, 15, 10 };
+            IEnumerable<int> retVal;
+            //act
+            binSearchTree.Add(1, null);
+            binSearchTree.Add(15, null);
+            binSearchTree.Add(19, null);
+            binSearchTree.Add(20, null);
+            binSearchTree.Add(18, null);
+            binSearchTree.Add(12, null);
+            binSearchTree.Add(11, null);
+            binSearchTree.Add(13, null);
+            retVal = binSearchTree.Traverse(TraverseOrder.postorder);
+            //assert
+            IEnumerator<int> enumExpectedVal = expectedVal.GetEnumerator();
+            IEnumerator<int> enumRetVal = retVal.GetEnumerator();
+            while (enumExpectedVal.MoveNext())
+            {
+                enumRetVal.MoveNext();
+                Assert.AreEqual(enumExpectedVal.Current, enumRetVal.Current);
+            }
+        }
+        [TestMethod]
+        public void BinarySearchTreeTraversePreOrder()
+        {
+            //arrange
+            BinarySearchTree<int, string> binSearchTree = new BinarySearchTree<int, string>(10, null);
+            IEnumerable<int> expectedVal = new int[] { 10, 1, 15, 12, 11, 13, 19, 18, 20 };
+            IEnumerable<int> retVal;
+            //act
+            binSearchTree.Add(1, null);
+            binSearchTree.Add(15, null);
+            binSearchTree.Add(19, null);
+            binSearchTree.Add(20, null);
+            binSearchTree.Add(18, null);
+            binSearchTree.Add(12, null);
+            binSearchTree.Add(11, null);
+            binSearchTree.Add(13, null);
+            retVal = binSearchTree.Traverse(TraverseOrder.preorder);
+            //assert
+            IEnumerator<int> enumExpectedVal = expectedVal.GetEnumerator();
+            IEnumerator<int> enumRetVal = retVal.GetEnumerator();
+            while (enumExpectedVal.MoveNext())
+            {
+                enumRetVal.MoveNext();
+                Assert.AreEqual(enumExpectedVal.Current, enumRetVal.Current);
+            }
+        }
     }
 }

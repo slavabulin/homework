@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -174,8 +175,67 @@ namespace Task7
             public TValue value;
             public TKey key;
         }
+        IEnumerable<TKey> TraverseTree(TraverseOrder order, Node node)
+        {
+            switch (order)
+            {
+                case TraverseOrder.preorder:
+                    if (node != null)
+                    {   
+                        yield return node.key;
+                        foreach (TKey key in TraverseTree(order, node.left))
+                        {
+                            yield return key;
+                        }
+                        foreach (TKey key in TraverseTree(order, node.right))
+                        {
+                            yield return key;
+                        }
+                    }
+                    break;
+                case TraverseOrder.inorder:
+                    if (node != null)
+                    {
+                        foreach (TKey key in TraverseTree(order, node.left))
+                        {
+                            yield return key;
+                        }
+                        yield return node.key;
+                        foreach (TKey key in TraverseTree(order, node.right))
+                        {
+                            yield return key;
+                        }
+                    }
+                    break;
+                case TraverseOrder.postorder:
+                    if (node != null)
+                    {
+                        foreach(TKey key in TraverseTree(order, node.left))
+                        {
+                            yield return key;
+                        }
 
+                        foreach (TKey key in TraverseTree(order, node.right))
+                        {
+                            yield return key;
+                        }
+                        yield return node.key;
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("unexpected param value", nameof(order));
+            }
+        }
+        public IEnumerable<TKey> Traverse(TraverseOrder order)
+        {
+            return TraverseTree(order, _root);
+        }
+        
     }
-
-    
+    public enum TraverseOrder
+    {
+        preorder,
+        inorder,
+        postorder
+    }
 }
