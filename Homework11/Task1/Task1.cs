@@ -26,133 +26,115 @@ namespace Task11
     {
         static void Main(string[] args)
         {
-            var inputArgs = "n:ted";
-            var StudentsList = StudentsInfoManager.GetStudentInfo(inputArgs);
-
-            #region
-            //var list = new List<StudentsInfo>();
-            //DateTime createTime;
-            //DateTime.TryParse("20:33:24.7180514", out createTime);
-            //list.Add(new StudentsInfo() { Name = "ted", Tests = new List<Test>() { new Test() { TestName = "math", TestDate = createTime, Assessment = 'F' } } });
-            //list.Add(new StudentsInfo() { Name = "john", Tests = new List<Test>() { new Test() { TestName = "english", TestDate = createTime, Assessment = 'A' } } });
-            //IDataProvider fm = new FileManager();
-            //fm.WriteTotalInfo(list);
-            
-            ////var list = fm.ReadTotalInfo();
-            ////var studInfo = list.Where(student => student.Name == "ted");
-            ////var studInfo = list.Where(student => student.Tests.Exists(test => test.Assessment == 'A'));
-
-            ////Predicate<Test> predicate = CheckInput;
-            ////var studInfo = list.Where(student => student.Tests.Exists(
-            ////    //test =>
-            ////    //test.Assessment == 'A'
-            ////    CheckInput
-            ////));
-
-            ////var tmp = studInfo.ToList();
-            ////Console.WriteLine(studInfo.ToList().ToString());
-            #endregion
+            //var studStrArr = new string[]{ "ted,math,20:33:24.7180514,A", "john,english,20:33:24.7180514,F", "mary,math,20:43:24,B" };
+            IDataProvider fm = new FileManager();
+            //fm.WriteTotalInfo(studStrArr);
+            var list = fm.ReadTotalInfo();
+            var sim = new StudentsInfoManager();
+            var result = sim.GetStudentInfo("a:F tn:math");
         }
     }
     
-    public static class StudentsInfoManager
+    public class StudentsInfoManager
     {
-        static Dictionary<string, string> argDictionary;
-        public static List<StudentsInfo> GetStudentInfo(string args)
+        public List<StudentsInfo> GetStudentInfo(string args)
         {
+            args = args.Trim();
+            while(args.Last()=='\n')
+            {
+                args = args.Remove(args.Length - 1);
+            }
             if (args == null) return null;
-            var inArgPairArray = args.Split();
-            argDictionary = new Dictionary<string, string>();
-            foreach(string argPair in inArgPairArray)
+
+            var argPairsArray = args.Split();
+            var filters = new StudentsInfo();
+            foreach(string argPair in argPairsArray)
             {
-                var tmpArr = argPair.Split(':');
-                if (tmpArr.Length != 2) throw new ArgumentException("incosistent args", nameof(args));
-                argDictionary.Add(tmpArr[0], tmpArr[1]);
+                if (String.IsNullOrWhiteSpace(argPair)) continue;
+                var filterKeyValueArr = argPair.Split(':');
+                if (filterKeyValueArr.Length != 2) throw new ArgumentException("inconsistent args", nameof(args));
+                switch(filterKeyValueArr[0])
+                {
+                    case "n":
+                        filters.StudentName = filterKeyValueArr[1];
+                        break;
+                    case "a":
+                        filters.Mark = filterKeyValueArr[1][0];
+                        break;
+                    case "td":
+                        DateTime tmpDateVar;
+                        if (DateTime.TryParse(filterKeyValueArr[1], out tmpDateVar))
+                            filters.TestDate = tmpDateVar;
+                        break;
+                    case "tn":
+                        filters.LessonName = filterKeyValueArr[1];
+                        break;
+                }
             }
-            Predicate<StudentsInfo> predicate = CheckInput;
+
             IDataProvider fm = new FileManager();
-            var list = fm.ReadTotalInfo();
-            var studInfo = list.Where(CheckInput);
-            if (studInfo.Count() > 0)
-                return studInfo.ToList();
-            else
-                return null;
-        }
-        static bool CheckInput(StudentsInfo stdntInfo)
-        {
-            bool retVal = false;
-            if(argDictionary.ContainsKey("n"))
-            {
-                string value;
-                argDictionary.TryGetValue("n", out value);
-                if (value == stdntInfo.Name) retVal = true;
-            }
-            if(argDictionary.ContainsKey("tn"))
-            {
-                string value;
-                argDictionary.TryGetValue("tn", out value);
-                if (stdntInfo.Tests.Any(test => test.TestName == value)) retVal = true;
-            }
-            if(argDictionary.ContainsKey("td"))
-            {
-                string value;
-                argDictionary.TryGetValue("td", out value);
-                DateTime dateTime;
-                DateTime.TryParse(value, out dateTime);
-                if (stdntInfo.Tests.Any(test => test.TestDate == dateTime)) retVal = true;
-            }
-            if(argDictionary.ContainsKey("a"))
-            {
-                string value;
-                argDictionary.TryGetValue("a", out value);
-                if (stdntInfo.Tests.Any(test => test.Assessment == value[0])) retVal = true;
-            }
-            return retVal;
+            var studInfoStrArr = fm.ReadTotalInfo();
+
+            var s = studInfoStrArr.Where(x =>
+            (x.StudentName == filters.StudentName
+            || x.Mark == filters.Mark
+            || x.TestDate.Equals(filters.TestDate)
+            || x.LessonName == filters.LessonName
+            ));
+
+            return s.ToList();
         }
     }
-    [Serializable]
     public class StudentsInfo
     {
-        Guid _studentID;
-        public StudentsInfo()
-        {
-            _studentID = Guid.NewGuid();
-        }
-        public Guid StudentID {
-            get
-            {
-                return _studentID;
-            }
-        }
-
-        public string Name { get; set; }
-        public List<Test> Tests { get; set; }
-    }
-    [Serializable]
-    public class Test
-    {
-        public string TestName { get; set; }
+        public string StudentName { get; set; }
+        public string LessonName { get; set; }
         public DateTime TestDate { get; set; }
-        public char Assessment { get; set; }
+        public char Mark { get; set; }
     }
+
     public class FileManager : IDataProvider
     {
         public string filePath = "StudentsInfo.dat";
         public List<StudentsInfo> ReadTotalInfo()
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            string[] strArr = null;
+            var studInfoList = new List<StudentsInfo>();
+            using (var sr = new StreamReader(filePath, System.Text.Encoding.Default))
             {
-                var listStudentsInfo = (List<StudentsInfo>)formatter.Deserialize(fs);
-                return listStudentsInfo;
-            }
+                var tmpStr = sr.ReadToEnd();
+                while(tmpStr.Last<char>() == '\n')
+                {
+                    tmpStr = tmpStr.Remove(tmpStr.Length - 1);
+                }                    
+                strArr = tmpStr.Split('\n');
+                foreach(string strInfo in strArr)
+                {
+                    var infoArr = strInfo.Split(',');
+                    var studInfo = new StudentsInfo();
+                    studInfo.StudentName = infoArr[0];
+                    studInfo.LessonName = infoArr[1];
+                    DateTime date;
+                    DateTime.TryParse(infoArr[2], out date);
+                    studInfo.TestDate = date;
+                    studInfo.Mark = infoArr[3].ToUpper().TrimStart()[0];
+                    studInfoList.Add(studInfo);
+                }
+            }            
+            return studInfoList;
         }
-        public bool WriteTotalInfo(List<StudentsInfo> listStudentsInfo)
+        public bool WriteTotalInfo(string[] studInfoArr)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            using (var sw = new StreamWriter(filePath))
             {
-                formatter.Serialize(fs, listStudentsInfo);
+                var sb = new StringBuilder();
+                foreach (string studInfo in studInfoArr)
+                {
+                    sb.Append(studInfo);
+                    sb.Append('\n');
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sw.Write(sb);
             }
             return true;
         }
