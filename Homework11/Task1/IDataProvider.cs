@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Task11
+﻿namespace Task11
 {
     public interface IDataProvider
     {
-        List<StudentsInfo> ReadTotalInfo();
-        bool WriteTotalInfo(string[] listStudentsInfo);
+        string[] ReadData();
+        bool WriteData(string[] data);
     }
 }
