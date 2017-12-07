@@ -1,4 +1,4 @@
-﻿namespace Task11
+﻿namespace Task1
 {
     public interface IDataProvider
     {

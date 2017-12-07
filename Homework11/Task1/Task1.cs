@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using System.Text.RegularExpressions;
 
-namespace Task11
+namespace Task1
 {
     /// <summary>
     /// Develop an console application that uses LINQ queries to retrieve and display data. Data is stored in binary file and represents information 
@@ -30,7 +27,7 @@ namespace Task11
         static void Main(string[] args)
         {
             var dataParser = new DataParser(new DataProvider("StudentsInfo.dat"));
-            var filters = dataParser.ParseArgs("tn:math tb:02.12.2017");
+            var filters = dataParser.ParseArgs("tn:math tb:03.12.2017");
             var filter = new Filter();
             var data  = dataParser.ParseData();
             var filteredList = filter.FilterData(data, filters);            
@@ -42,9 +39,41 @@ namespace Task11
         public string LessonName { get; set; }
         public DateTime? TestDate { get; set; }
         public char Mark { get; set; }
+        public override bool Equals(object obj)
+        {
+            var item = obj as StudentsInfo;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            if (this.LessonName == item.LessonName
+                && this.Mark == item.Mark
+                && this.StudentName == item.StudentName
+                && this.TestDate == item.TestDate)
+                return true;
+            else return false;
+        }
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            unchecked
+            {
+                hash = LessonName.GetHashCode()
+                    + Mark.GetHashCode()
+                    + StudentName.GetHashCode()
+                    + TestDate.GetHashCode();
+            }
+            return hash;
+        }
     }
-    public class FilterInfo:StudentsInfo
+    public class FilterInfo
     {
+        public string StudentName { get; set; }
+        public string LessonName { get; set; }
+        public DateTime? TestDate { get; set; }
+        public char Mark { get; set; }
         public DateTime? TimeBefore { get; set; }
         public DateTime? TimeAfter { get; set; }
     }
@@ -70,10 +99,7 @@ namespace Task11
             using (var sr = new StreamReader(_filePath, Encoding.Default))
             {
                 var tmpStr = sr.ReadToEnd();
-                while (tmpStr.Last() == '\n')
-                {
-                    tmpStr = tmpStr.Remove(tmpStr.Length - 1);
-                }
+                tmpStr = tmpStr.Trim();
                 strArr = tmpStr.Split('\n');
             }
             return strArr;
@@ -99,6 +125,7 @@ namespace Task11
         IDataProvider _dataProvider;
         public DataParser(IDataProvider dataProvider)
         {
+            if (dataProvider == null) throw new ArgumentNullException(nameof(dataProvider), "params should not be null");
             _dataProvider = dataProvider;
         }
         public List<StudentsInfo> ParseData()
@@ -123,11 +150,6 @@ namespace Task11
         {
             if (args == null) return null;
             args = args.Trim();
-            while (args.Last() == '\n')
-            {
-                args = args.Remove(args.Length - 1);
-            }
-            if (args == null) return null;
 
             var argPairsArray = args.Split();
             var filters = new FilterInfo();
@@ -174,15 +196,35 @@ namespace Task11
     {
         public List<StudentsInfo> FilterData(List<StudentsInfo> data, FilterInfo filters)
         {
-            var s = data.Where(x =>
-            (x.StudentName == filters.StudentName
-            || x.Mark == filters.Mark
-            || x.TestDate.Equals(filters.TestDate)
-            || x.LessonName == filters.LessonName
-            || x.TestDate <= filters.TimeBefore
-            || x.TestDate >= filters.TimeAfter
-            ));
+            if (data == null) throw new ArgumentNullException(nameof(data), "argument should not be null");
+            if (filters == null) throw new ArgumentNullException(nameof(filters), "argument should not be null");
 
+            var s = data as IEnumerable<StudentsInfo>;
+
+            if (filters.LessonName != null)
+            {
+                s = s.Where(x => x.LessonName == filters.LessonName);
+            }
+            if(filters.Mark!=default(char))
+            {
+                s=s.Where(x => x.Mark == filters.Mark);
+            }
+            if(filters.StudentName!= null)
+            {
+                s = s.Where(x => (x.StudentName == filters.StudentName));
+            }
+            if(filters.TestDate!=null)
+            {
+                s = s.Where(x => x.TestDate.Equals(filters.TestDate));
+            }
+            if(filters.TimeAfter!=null)
+            {
+                s = s.Where(x => x.TestDate >= filters.TimeAfter);
+            }
+            if(filters.TimeBefore!=null)
+            {
+                s = s.Where(x => x.TestDate <= filters.TimeBefore);
+            }
             return s.ToList();
         }
     }
