@@ -18,25 +18,20 @@ namespace Task1
     }
     public class XmlTransformer
     {
-        string _inputXml;
+        string _filePath;
         public bool isValid;
+
         public XmlTransformer(string filePath)
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath), "argument should not be null");
             if (!File.Exists(filePath))
                 throw new FileNotFoundException("file ${filePath} not found");
-
-            string xmlStr;
-            using (var freader = new StreamReader(filePath))
-            {
-                xmlStr = freader.ReadToEnd();
-                _inputXml = xmlStr;
-            }
+            _filePath = filePath;
         }
         public void Validate(string xsdFilePath)
         {
-            isValid = false;
+            isValid = true;
             if (xsdFilePath == null)
                 throw new ArgumentNullException(nameof(xsdFilePath), "argument should not be null");
             if (!File.Exists(xsdFilePath))
@@ -46,14 +41,14 @@ namespace Task1
             xmlReaderSettings.Schemas.Add("", xsdFilePath);
             xmlReaderSettings.ValidationType = ValidationType.Schema;
             xmlReaderSettings.ValidationEventHandler += XmlValidationEventHandler;
-            using (var reader = XmlReader.Create(new MemoryStream(Encoding.Unicode.GetBytes(_inputXml)), xmlReaderSettings))
+            using (var reader = XmlReader.Create(_filePath, xmlReaderSettings))
             {
-                while (reader.Read());
+                while (reader.Read()) ;
             }
         }
         void XmlValidationEventHandler(object sender, ValidationEventArgs args)
         {
-            isValid = true;
+            isValid = false;
         }
         public string Transform(string xsltFilePath)
         {
@@ -61,34 +56,24 @@ namespace Task1
                 throw new ArgumentNullException(nameof(xsltFilePath), "argument should not be null");
             if (!File.Exists(xsltFilePath))
                 throw new FileNotFoundException("file ${xsltFilePath} not found");
-
-            string xsltStr;
-            using (var freader = new StreamReader(xsltFilePath))
+            
+            var xslt = new XslCompiledTransform();
+            using (var xr = XmlReader.Create(xsltFilePath))
             {
-                xsltStr = freader.ReadToEnd();
-
-                var xslt = new XslCompiledTransform();
-                using (var sr = new StringReader(xsltStr))
-                {
-                    using (var xr = XmlReader.Create(sr))
-                    {
-                        xslt.Load(xr);
-                    }
-                }
-                var result = String.Empty;
-                using (var sr = new StringReader(_inputXml))
-                {
-                    using (var xr = XmlReader.Create(sr))
-                    {
-                        using (var sw = new StringWriter())
-                        {
-                            xslt.Transform(xr, null, sw);
-                            result = sw.ToString();
-                        }
-                    }
-                }
-                return result;
+                xslt.Load(xr);
             }
+            var result = String.Empty;
+
+            using (var xr = XmlReader.Create(_filePath))
+            {
+                using (var sw = new StringWriter())
+                {
+                    xslt.Transform(xr, null, sw);
+                    result = sw.ToString();
+                }
+            }
+            return result;
         }
     }
 }
+
