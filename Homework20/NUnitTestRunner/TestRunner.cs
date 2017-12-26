@@ -53,60 +53,71 @@ namespace NUnitTestRunner
                     : Enumerable.Repeat(default(object[]), 1);
                 ///---------------------------------------------------------------------------
                 var testCaseSourceAttrMethods = GetTestCaseSourceAttribute(testMethod);
-                if(testCaseSourceAttrMethods!=null)
+                if (testCaseSourceAttrMethods != null)
                 {
                     foreach (TestCaseSourceAttribute testCaseSourceMethod in testCaseSourceAttrMethods)
                     {
                         var testCaseSources =
-                        _testAssembly.DefinedTypes.Where(y => y.GetDeclaredField(testCaseSourceMethod.SourceName) != null
-                        || y.GetDeclaredMethod(testCaseSourceMethod.SourceName) != null
-                        || y.GetDeclaredProperty(testCaseSourceMethod.SourceName) != null);
+                        _testAssembly.DefinedTypes
+                        .Select(x => x.DeclaredMembers
+                        .Where(y => y.Name == testCaseSourceMethod.SourceName)
+                        );
 
                         foreach (var testCaseSrc in testCaseSources)
                         {
-                            object[] testCaseSrcData = null;
-                            switch (testCaseSrc.MemberType)
+                            testCaseSrc.Select(x =>
                             {
-                                case (MemberTypes.Field):
-                                    testCaseSrcData =
-                                testCaseSrc.GetDeclaredField(testCaseSourceMethod.SourceName).GetValue(null) as object[];
-                                    break;
-                                case (MemberTypes.Method):
-                                    testCaseSrcData =
-                                testCaseSrc.GetDeclaredMethod(testCaseSourceMethod.SourceName).Invoke(null, null) as object[];
-                                    break;
-                                case (MemberTypes.Property):
-                                    testCaseSrcData =
-                                testCaseSrc.GetDeclaredProperty(testCaseSourceMethod.SourceName).GetValue(null) as object[];
-                                    break;
-                                default:
-                                    throw new ArgumentException("unsupported test data source", nameof(testCaseSrc.MemberType));
-                            }
-                            foreach (var arg in testCaseSrcData)
-                            {
-                                var n = new List<object>();
-                                foreach (var b in (IEnumerable)arg)
+                                object[] testCaseSrcData = null;
+                                switch (x.MemberType)
                                 {
-                                    object o = b;
-                                    n.Add(o);
+                                    case (MemberTypes.Field):
+                                        testCaseSrcData =
+                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredFields.Select(c => c.GetValue(null))).ToArray();
+                                        break;
+                                    case (MemberTypes.Method):
+                                        testCaseSrcData =
+                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredMethods.Select(c => c.Invoke(null, null))).ToArray();
+                                        break;
+                                    case (MemberTypes.Property):
+                                        testCaseSrcData =
+                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredProperties.Select(c => c.GetValue(null))).ToArray();
+                                        break;
+                                    default:
+                                        throw new ArgumentException("unsupported test data source", nameof(x.MemberType));
                                 }
-                                testMethod.Invoke(instance, n.ToArray());
+
+                                var data = testCaseSrcData
+                                .Select(srcData =>
+                                {
+                                    var a = (object[])srcData;
+                                    var srcElem = a.Select(w =>
+                                    {
+                                        var m =
+                                        (object[])w;
+                                        return m;
+                                    });
+                                    return a;
+                                });
+                                arguments = data;
+                                return x;
                             }
+                            ).ToList();
+
                         }
                     }
                 }
-                
+
                 ///---------------------------------------------------------------------------
                 foreach (var args in arguments)
                 {
                     try
                     {
-                        if(setupMethod!=null) setupMethod.Invoke(instance, null);
+                        if (setupMethod != null) setupMethod.Invoke(instance, null);
                         var argsString = args == null ? string.Empty : string.Join(", ", args);
                         Console.WriteLine($"Run method {testType.Name}.{testMethod.Name}({argsString})");
                         testMethod.Invoke(instance, args);
                         Console.WriteLine("   success");
-                        if(tearDownMethod!=null) tearDownMethod.Invoke(instance, null);                        
+                        if (tearDownMethod != null) tearDownMethod.Invoke(instance, null);
                     }
                     catch (TargetInvocationException exception)
                     {
