@@ -93,22 +93,29 @@ namespace Homework21
                 $"CONSTRAINT[FK_Attendance_ToTable_1] FOREIGN KEY([LectureDate]) REFERENCES[dbo].[Lecture] ([Date])) ";
             AddData(queryString);
         }
+        /// <summary>
+        /// sc -report: вывести отчет о посещаемости
+        /// *выводить Topic лекции
+        /// * если студент не посетил ни одной лекции, все равно выводить его имя
+        /// *если лекцию никто не посеил, все равно выводить дату и тему
+        /// </summary>
         public void GetReport()
         {
-            string queryString1 = $"select Topic LectureDate, StudentName, Mark from dbo.Attendance," +
-                $" dbo.Lecture where Lecture.Date = Attendance.LectureDate";
+            string queryString1 = $"select Topic, Date, Name, Mark from Students " +
+                $"left join Attendance on Attendance.StudentName = Students.Name " +
+                $"full join Lecture on LectureDate = Date order by Topic, Name ";
             SqlCommand command1 = new SqlCommand(queryString1, _connection);
-            
+
             try
             {
                 _connection.Open();
-                SqlDataReader reader1 = command1.ExecuteReader();
-                while (reader1.Read())
+                SqlDataReader reader = command1.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    Console.WriteLine("{0} - \t{1}  - \t{2}",
-                        reader1[0], reader1[1], reader1[2]);
+                    Console.WriteLine($"||\t{reader[0], 10}|\t{reader[1], 20}|\t{reader[2], 10}|\t{reader[3], 10}||");
                 }
-                reader1.Close();
+                reader.Close();
             }
             catch (Exception ex)
             {
@@ -119,16 +126,31 @@ namespace Homework21
                 _connection.Close();
             }
         }
+        /// <summary>
+        /// sc -lecture <DATE> <TOPIC>: добавить лекцию в таблицу лекций (по дате)
+        /// например: sc -lecture 18.12.2017 ADONET
+        /// </summary>
+        /// <param name="args"></param>
         public void AddLecture(string[] args)
         {
             string queryString =$"insert into dbo.Lecture(Date, Topic) values ('{FormatTime(args[1]):yyyy.MM.dd}', '{args[2]}')";
             AddData(queryString);
         }
+        /// <summary>
+        /// sc -student <NAME>: добавить студента в таблицу студентов
+        /// например: sc -student Ivan
+        /// </summary>
+        /// <param name="args"></param>
         public void AddStudent(string[] args)
         {
             string queryString = $"insert into dbo.Students(Name) values ('{args[1]}')";
             AddData(queryString);
         }
+        /// <summary>
+        /// sc -attend <STUDENT_NAME> <DATE> <MARK>: добавить запись о посещении студента в таблице посещаемости
+        /// например: sc -attend Ivan 18.12.2017 5
+        /// </summary>
+        /// <param name="args"></param>
         public void AddAttend(string[]args)
         {
             string queryString = $"insert into dbo.Attendance (StudentName, LectureDate, Mark) values ('{args[1]}','{FormatTime(args[2]):yyyy.MM.dd}','{args[3]}')";
@@ -204,46 +226,3 @@ namespace Homework21
         #endregion
     }
 }
-
-/*
- Drop table dbo.Attendance, dbo.Lecture, dbo.Students
-
- CREATE TABLE [dbo].[Students] (
-    [Name] NVARCHAR (50) NOT NULL,
-    PRIMARY KEY CLUSTERED ([Name] ASC)
-);
-CREATE TABLE [dbo].[Lecture] (
-    [Date]  DATE          NOT NULL,
-    [Topic] NVARCHAR (50) NULL,
-    PRIMARY KEY CLUSTERED ([Date] ASC)
-);
-CREATE TABLE [dbo].[Attendance] (
-    [Id]          INT           IDENTITY (1, 1) NOT NULL,
-    [LectureDate] DATE          NULL,
-    [StudentName] NVARCHAR (50) NULL,
-    [Mark]        INT           NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_Attendance_ToTable] FOREIGN KEY ([StudentName]) REFERENCES [dbo].[Students] ([Name]),
-    CONSTRAINT [FK_Attendance_ToTable_1] FOREIGN KEY ([LectureDate]) REFERENCES [dbo].[Lecture] ([Date])
-);
-
-CREATE PROCEDURE [dbo].[MarkAttendance]
-	@StudentName nvarchar(50) = 0,
-	@LectureDate datetime,
-	@Mark int
-AS
-	begin 
-	insert Attendance
-	(
-	StudentName,
-	LectureDate,
-	Mark
-	)
-	select
-	@StudentName,
-	@LectureDate,
-	@Mark
-	
-	end
-RETURN 0
- */
