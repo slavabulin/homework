@@ -14,7 +14,7 @@ namespace TestSample
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        private static object[] testData = new object[]
+        public static object[] testData = new object[]
         {
             new int [] { 1, 1, 2},
             new int [] { 1, 2, 3},

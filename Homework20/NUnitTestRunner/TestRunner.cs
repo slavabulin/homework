@@ -48,65 +48,71 @@ namespace NUnitTestRunner
             {
                 var testCaseAttributes = GetTestCaseAttributes(testMethod);
 
-                var arguments = testCaseAttributes.Any()
-                    ? testCaseAttributes.Select(x => x.Arguments)
-                    : Enumerable.Repeat(default(object[]), 1);
+                var arguments = new List<object[]>();
+
+                if(testCaseAttributes.Any())
+                {
+                    arguments.AddRange(testCaseAttributes.Select(x => x.Arguments));
+                }
                 ///---------------------------------------------------------------------------
+                #region
                 var testCaseSourceAttrMethods = GetTestCaseSourceAttribute(testMethod);
                 if (testCaseSourceAttrMethods != null)
                 {
                     foreach (TestCaseSourceAttribute testCaseSourceMethod in testCaseSourceAttrMethods)
                     {
-                        var testCaseSources =
-                        _testAssembly.DefinedTypes
-                        .Select(x => x.DeclaredMembers
-                        .Where(y => y.Name == testCaseSourceMethod.SourceName)
-                        );
-
+                        var testCaseSources = 
+                        _testAssembly.DefinedTypes.Select(x => x.DeclaredMembers
+                        .Where(y => y.Name == testCaseSourceMethod.SourceName))
+                        .ToArray();
+                        
                         foreach (var testCaseSrc in testCaseSources)
                         {
                             testCaseSrc.Select(x =>
                             {
                                 object[] testCaseSrcData = null;
+
                                 switch (x.MemberType)
                                 {
                                     case (MemberTypes.Field):
                                         testCaseSrcData =
-                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredFields.Select(c => c.GetValue(null))).ToArray();
+                                        testType.GetRuntimeField(testCaseSourceMethod.SourceName).GetValue(x) as object[];
                                         break;
                                     case (MemberTypes.Method):
                                         testCaseSrcData =
-                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredMethods.Select(c => c.Invoke(null, null))).ToArray();
+                                        testType.GetRuntimeMethod(testCaseSourceMethod.SourceName, null).Invoke(null, null) as object[];
                                         break;
                                     case (MemberTypes.Property):
                                         testCaseSrcData =
-                                        _testAssembly.DefinedTypes.Select(a => a.DeclaredProperties.Select(c => c.GetValue(null))).ToArray();
+                                        testType.GetRuntimeProperty(testCaseSourceMethod.SourceName).GetValue(null) as object[];
                                         break;
                                     default:
                                         throw new ArgumentException("unsupported test data source", nameof(x.MemberType));
                                 }
 
-                                var data = testCaseSrcData
-                                .Select(srcData =>
+                                foreach (var arg in testCaseSrcData)
                                 {
-                                    var a = (object[])srcData;
-                                    var srcElem = a.Select(w =>
+                                    if (arg is IEnumerable sourceValueCases)
                                     {
-                                        var m =
-                                        (object[])w;
-                                        return m;
-                                    });
-                                    return a;
-                                });
-                                arguments = data;
+                                        var listArguments = new List<object>();
+                                        foreach (var sourceCase in sourceValueCases)
+                                        {
+                                            listArguments.Add((object)sourceCase);
+                                        }
+                                        arguments.Add(listArguments.ToArray());
+                                    }
+                                    else
+                                    {
+                                        arguments = Enumerable.Repeat(new object[1] { arg }, 1).ToList();
+                                    }
+                                }
                                 return x;
                             }
                             ).ToList();
-
                         }
                     }
                 }
-
+                #endregion
                 ///---------------------------------------------------------------------------
                 foreach (var args in arguments)
                 {
