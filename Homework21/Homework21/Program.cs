@@ -65,7 +65,7 @@ namespace Homework21
             }
         }
     }
-    class DBManager : IDisposable
+    public class DBManager : IDisposable
     {
         SqlConnection _connection;
         public DBManager(string connectionString)
