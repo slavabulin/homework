@@ -37,13 +37,11 @@ namespace Homework21.Tests
         {
             //Arrange
             string[] args = new[] { "-lecture", "31.12.2222", "math" };
-
-            string queryString1 = "select * from Lecture";
             DateTime date = FormatTime(args[1]);
-            string queryToRemove = $"delete from Lecture where Date = '{date:yyyyMMdd}' and Topic = '{args[2]}'";
-            SqlCommand command1 = new SqlCommand(queryString1, _connection);
+            string queryString1 = "select * from Lecture";
+            
             var lectureTopicDate = new List<Tuple<string,string>>();
-
+            SqlCommand command1 = new SqlCommand(queryString1, _connection);
             //Act
             _dbManager.AddLecture(args);
 
@@ -61,11 +59,17 @@ namespace Homework21.Tests
             {
                 Console.WriteLine(ex.Message);
             }
+
             Assert.IsTrue(lectureTopicDate.Contains(new Tuple<string, string>(date.ToString("G"), args[2])));
+
+            string queryToRemove = $"delete from Lecture where Date = (@Date) and Topic = (@Topic)";
+            
             try
             {
-                command1 = new SqlCommand(queryToRemove, _connection);
-                command1.ExecuteNonQuery();
+                SqlCommand command2 = new SqlCommand(queryToRemove, _connection);
+                command2.Parameters.AddWithValue("@Date", FormatTime(args[1]).ToString("yyyy.MM.dd"));
+                command2.Parameters.AddWithValue("@Topic", args[2]);
+                command2.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -75,13 +79,48 @@ namespace Homework21.Tests
         [TestMethod]
         public void AddStudentShouldPass()
         {
+            ////Arrange
+            //string[] args = new []{"-student","Ivan" };
+            //string queryString1 = "select * from Students";
+            //string queryToRemove = $"delete from Students where Name = @Name";
+            //SqlCommand command1 = new SqlCommand(queryString1, _connection);
+            //command1.Parameters.AddWithValue("@Name", args[1]);
+            //var studNames = new List<string>();
+
+            ////Act
+            //_dbManager.AddStudent(args);
+
+            ////Assert
+            //try
+            //{
+            //    SqlDataReader reader = command1.ExecuteReader();
+            //    while (reader.Read())
+            //    {
+            //        studNames.Add(reader[0].ToString());
+            //    }
+            //    reader.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+            //Assert.IsTrue(studNames.Contains(args[1]));
+            //try
+            //{
+            //    command1 = new SqlCommand(queryToRemove, _connection);
+            //    command1.ExecuteNonQuery();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
             //Arrange
-            string[] args = new []{"-student","Ivan" };
+            string[] args = new[] { "-student", "Ivan" };
             string queryString1 = "select * from Students";
-            string queryToRemove = $"delete from Students where Name = '{args[1]}'";
-            SqlCommand command1 = new SqlCommand(queryString1, _connection);
+
             var studNames = new List<string>();
-            
+            SqlCommand command1 = new SqlCommand(queryString1, _connection);
             //Act
             _dbManager.AddStudent(args);
 
@@ -99,11 +138,16 @@ namespace Homework21.Tests
             {
                 Console.WriteLine(ex.Message);
             }
+
             Assert.IsTrue(studNames.Contains(args[1]));
+
+            string queryToRemove = $"delete from Students where Name = @Name";
+
             try
             {
-                command1 = new SqlCommand(queryToRemove, _connection);
-                command1.ExecuteNonQuery();
+                SqlCommand command2 = new SqlCommand(queryToRemove, _connection);
+                command2.Parameters.AddWithValue("@Name", args[1]);
+                command2.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -118,8 +162,7 @@ namespace Homework21.Tests
 
             string queryString1 = "select LectureDate, StudentName, Mark from Attendance";
             DateTime date = FormatTime(args[2]);
-            string queryToRemove = $"delete from Attendance where StudentName = '{args[1]}'" +
-                $"and LectureDate = '{date.ToString("yyyy.MM.dd")}' and Mark = '{args[3]}'";
+            
             SqlCommand command1 = new SqlCommand(queryString1, _connection);
             var attendStudDateMark = new List<Tuple<string, string, string>>();
             _dbManager.AddStudent(new[] { "-student", $"{args[1]}" });
@@ -146,8 +189,13 @@ namespace Homework21.Tests
             Assert.IsTrue(attendStudDateMark.Contains(new Tuple<string, string, string>(date.ToString("G"), args[1], args[3])));
             try
             {
-                command1 = new SqlCommand(queryToRemove, _connection);
-                command1.ExecuteNonQuery();
+                string queryToRemove = $"delete from Attendance where StudentName = @StudentName " +
+                $"and LectureDate = @LectureDate and Mark = @Mark delete from Students where Name = @StudentName";
+                SqlCommand command2 = new SqlCommand(queryToRemove, _connection);
+                command2.Parameters.AddWithValue("@StudentName", args[1]);
+                command2.Parameters.AddWithValue("@LectureDate", date.ToString("yyyy.MM.dd"));
+                command2.Parameters.AddWithValue("@Mark", args[3]);
+                command2.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -171,14 +219,11 @@ namespace Homework21.Tests
             //Assert
             try
             {
-                //SqlParameter returnParameter = command1.Parameters.Add("RetVal", SqlDbType.Int);
-                //returnParameter.Direction = ParameterDirection.ReturnValue;
                 SqlDataReader reader = command1.ExecuteReader();
                 while(reader.Read())
                 {
                     retVal = (int)reader[0];
                 }
-                //retVal = (int)returnParameter.Value;
             }
             catch(Exception ex)
             {

@@ -133,8 +133,11 @@ namespace Homework21
         /// <param name="args"></param>
         public void AddLecture(string[] args)
         {
-            string queryString =$"insert into dbo.Lecture(Date, Topic) values ('{FormatTime(args[1]):yyyy.MM.dd}', '{args[2]}')";
-            AddData(queryString);
+            string queryString = $"insert into dbo.Lecture(Date, Topic) values (@Date, @Topic)";
+            SqlCommand command = new SqlCommand(queryString, _connection);
+            command.Parameters.AddWithValue("@Date", FormatTime(args[1]).ToString("yyyy.MM.dd"));
+            command.Parameters.AddWithValue("@Topic", args[2]);
+            AddData(command);
         }
         /// <summary>
         /// sc -student <NAME>: добавить студента в таблицу студентов
@@ -143,8 +146,10 @@ namespace Homework21
         /// <param name="args"></param>
         public void AddStudent(string[] args)
         {
-            string queryString = $"insert into dbo.Students(Name) values ('{args[1]}')";
-            AddData(queryString);
+            string queryString = $"insert into dbo.Students(Name) values (@StudentName)";
+            SqlCommand command = new SqlCommand(queryString, _connection);
+            command.Parameters.AddWithValue("@StudentName", args[1]);
+            AddData(command);
         }
         /// <summary>
         /// sc -attend <STUDENT_NAME> <DATE> <MARK>: добавить запись о посещении студента в таблице посещаемости
@@ -153,8 +158,13 @@ namespace Homework21
         /// <param name="args"></param>
         public void AddAttend(string[]args)
         {
-            string queryString = $"insert into dbo.Attendance (StudentName, LectureDate, Mark) values ('{args[1]}','{FormatTime(args[2]):yyyy.MM.dd}','{args[3]}')";
-            AddData(queryString);
+            string queryString = $"insert into dbo.Attendance (StudentName, LectureDate, Mark)" +
+                $" values (@StudentName, @LectureDate, @Mark)";
+            SqlCommand command = new SqlCommand(queryString, _connection);
+            command.Parameters.AddWithValue("@StudentName", args[1]);
+            command.Parameters.AddWithValue("@LectureDate", FormatTime(args[2]).ToString("yyyy.MM.dd"));
+            command.Parameters.AddWithValue("@Mark", args[3]);
+            AddData(command);
         }
         void AddData(string queryString)
         {
@@ -164,6 +174,22 @@ namespace Homework21
             {
                 _connection.Open();
                 command1.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+        void AddData(SqlCommand command)
+        {
+            try
+            {
+                _connection.Open();
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
